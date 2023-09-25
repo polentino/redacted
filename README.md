@@ -40,7 +40,7 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 
 ## Usage
 
-in your `project/build.sbt` file, add the following line
+in your `project/plugins.sbt` file, add the following line (once it will be published :) 
 
 ```scala 3
 addCompilerPlugin("io.github.polentino" % "redacted" % "0.0.1")
@@ -129,7 +129,7 @@ The patching itself is pretty simple: given the existing `toString` method defin
 def toString(): String = scala.runtime.ScalaRunTime._toString(this)
 ```
 
-with this
+it will replace its body with the following one
 
 ```scala 3
 def toString(): String = io.github.polentino.redacted.helpers.toRedactedString(this, Seq("field_A", ..., "field_X"))

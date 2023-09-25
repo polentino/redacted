@@ -1,12 +1,10 @@
 package io.github.polentino.redacted
 
-import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.Checkpoints._
-
-import java.util.UUID
-
+import org.scalatest.flatspec.AnyFlatSpec
 
 class PluginSpec extends AnyFlatSpec {
+
   final case class Testing(@redacted name: String, age: Int, @redacted email: String)
 
   private val name: String = "Berfu"
@@ -46,7 +44,8 @@ class PluginSpec extends AnyFlatSpec {
         wrapper.id == id &&
           wrapper.testing.name == name &&
           wrapper.testing.age == age &&
-          wrapper.testing.email == email)
+          wrapper.testing.email == email
+      )
     }
     cp.reportAll()
   }
@@ -68,7 +67,8 @@ class PluginSpec extends AnyFlatSpec {
         wrapper.id == id &&
           wrapper.testing.name == name &&
           wrapper.testing.age == age &&
-          wrapper.testing.email == email)
+          wrapper.testing.email == email
+      )
     }
     cp.reportAll()
   }
