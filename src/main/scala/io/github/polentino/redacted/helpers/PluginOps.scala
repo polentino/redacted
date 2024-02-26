@@ -1,63 +1,75 @@
 package io.github.polentino.redacted.helpers
 
 import dotty.tools.dotc.*
-import dotty.tools.dotc.ast.Trees.*
+import dotty.tools.dotc.ast.*
 import dotty.tools.dotc.ast.tpd.*
-import dotty.tools.dotc.ast.{tpd, *}
-import dotty.tools.dotc.core.Constants.Constant
 import dotty.tools.dotc.core.Contexts.*
+import dotty.tools.dotc.core.Names.TermName
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.*
-import dotty.tools.dotc.plugins.PluginPhase
+import dotty.tools.dotc.util.Spans.Span
 
-import io.github.polentino.redacted.redacted
+import io.github.polentino.redacted.helpers.AstOps.*
 
 object PluginOps {
-  private val REDACTED_CLASS = classOf[redacted].getCanonicalName
   private val TO_REDACTED_STRING = "io.github.polentino.redacted.helpers.toRedactedString"
+  private val REDACTED_FIELDS_VARIABLE = "__redactedFields"
+  private val TO_STRING_NAME = "toString"
 
   /** Checks if all preconditions to start the redaction process are met and, if so, executes `withValidTree`
     *
     * @param tree
-    *   the tree to be checked
+    *   the tree that will be checked whether it has redacted fields or not
     * @param withValidTree
-    *   the function to be executed if the preconditions are valid
+    *   the action to perform in case there are redacted fields
     * @param Context
     *   implicit param
     * @return
-    *   the modified case class `TypeDef` if the preconditions were met, or the original one otherwise
+    *   the modified case class `TypeDef` if the conditions were met, or the original one otherwise
     */
-  def analyzeTree(tree: tpd.TypeDef)(withValidTree: List[String] => tpd.TypeDef)(using Context): tpd.TypeDef = {
-    if (tree.symbol.is(Flags.CaseClass)) {
-      val redactedYpe = Symbols.requiredClass(REDACTED_CLASS)
-      val fieldsToRedact = tree.symbol.primaryConstructor.paramSymss.flatten.collect {
-        case s if s.annotations.exists(_.matches(redactedYpe)) => s.name.toString
-      }
-
-      if (fieldsToRedact.nonEmpty) withValidTree(fieldsToRedact)
-      else tree
-
+  def analyseTree(tree: tpd.TypeDef)(withValidTree: Types.TermRef => tpd.TypeDef)(using Context): tpd.TypeDef =
+    if (tree.symbol.redactedFields.nonEmpty) {
+      val valueRef = tree.symbol.linkedClass.requiredValueRef(Names.termName(REDACTED_FIELDS_VARIABLE))
+      withValidTree(valueRef)
     } else tree
-  }
+
+  /** Checks if all preconditions to start the enrichment process are met and, if so, executes `withValidTree`
+    *
+    * @param tree
+    *   the tree that will be checked whether it has a companion clas with redacted fields or not
+    * @param withValidTree
+    *   the action to perform in case there are redacted fields
+    * @param Context
+    *   implicit param
+    * @return
+    *   the modified object `TypeDef` if the conditions were met, or the original one otherwise
+    */
+  def whenRedactedCompanionObject(tree: tpd.TypeDef)(withValidTree: List[String] => tpd.TypeDef)(using
+    Context
+  ): tpd.TypeDef =
+    if (tree.isCompanionObject && tree.hasCompanionCaseClass) {
+      val fieldsToRedact = tree.symbol.linkedClass.redactedFields
+      if (fieldsToRedact.nonEmpty) withValidTree(fieldsToRedact) else tree
+    } else tree
 
   /** Given a case class where `field_A, ..., field_X` are all annotated with ``@redacted``, this method will detect the
     * presence of a `toString` method and patch it in order to not print its sensitive fields
     *
     * @param tree
     *   the typed AST representation of the case class we want to redact
-    * @param fieldsWithAnnotations
-    *   the specific fields we want to redact
+    * @param ref
+    *   a reference to the variable `__redactedFields` contained in `tree` companion object
     * @param Context
     *   implicit param
     * @return
     *   the updated AST definition for the case class, with the patched `toString` method
     */
-  def patchTree(tree: tpd.TypeDef, fieldsWithAnnotations: List[String])(using Context): tpd.TypeDef = {
+  def patchToStringMethod(tree: tpd.TypeDef, ref: Types.TermRef)(using ctx: Context): tpd.TypeDef = {
     tree.rhs match {
       case template: tpd.Template =>
         val newBody = template.body.map {
-          case oldMethodDefinition: tpd.DefDef if oldMethodDefinition.name.toString == "toString" =>
-            patchToString(oldMethodDefinition, fieldsWithAnnotations)
+          case oldMethodDefinition: tpd.DefDef if oldMethodDefinition.name.toString == TO_STRING_NAME =>
+            patchToString(oldMethodDefinition, tpd.ref(ref))
 
           case otherField => otherField
         }
@@ -70,36 +82,49 @@ object PluginOps {
     }
   }
 
-  /** Given a case class where `field_A, ..., field_X` are all annotated with ``@redacted``, this method changes the
-    * typed AST definition of `toString` from <blockquote><pre> def toString(): String =
-    * scala.runtime.ScalaRunTime._toString(this) </pre></blockquote> to <blockquote><pre> def toString(): String =
-    * io.github.polentino.redacted.helpers.toRedactedString(this, Seq(field_A, ..., field_X)) </pre></blockquote>
+  /** Given a list of strings, it create a TPD representation of a sequence of those
     *
-    * @param oldToStringDefinition
-    *   the AST of the old `toString` method definition
     * @param fieldsToRedact
-    *   a list of field names that needs to be redacted from the owning case class
+    *   the names of the fields that need to be redacted
     * @param Context
     *   implicit param
     * @return
-    *   the new AST method definition for toString that will redact the sensitive fields
+    *   a `tpd.SeqLiteral` representation of aforementioned list
     */
-  private def patchToString(oldToStringDefinition: tpd.DefDef, fieldsToRedact: List[String])(using
-    Context
-  ): tpd.DefDef = {
-    // Seq[String](field_A, ... , field_X)
-    val seqArgs = tpd.SeqLiteral(fieldsToRedact.map(_.toConstantLiteral), tpd.TypeTree(defn.StringType))
+  def createFieldsSequence(fieldsToRedact: List[String])(using Context): tpd.SeqLiteral =
+    tpd.SeqLiteral(fieldsToRedact.map(_.toConstantLiteral), tpd.TypeTree(defn.StringType))
 
-    // toRedactedString(this, Seq[String](field_A, ... , field_X))
+  /** Creates a TPD representation of a value, for the `tree` passed as parameter, with a given owner
+    *
+    * @param rhs
+    *   the right hand side `tpd.Tree` of the val assingment
+    * @param owner
+    *   the owner of the val
+    * @param Context
+    *   implicit param
+    * @return
+    *   the complete definition of the value
+    */
+  def createRedactedFieldsValDef(rhs: tpd.Tree, owner: Symbol)(using Context): tpd.ValDef = {
+    val redactedFieldsSymbol = newSymbol[TermName](
+      owner,
+      Names.termName(REDACTED_FIELDS_VARIABLE),
+      Flags.Final | Flags.OuterAccessor | Flags.Synthetic,
+      defn.SeqType.appliedTo(defn.StringType),
+      owner,
+      owner.coord
+    ).entered
+
+    tpd.ValDef(redactedFieldsSymbol, rhs).withSpan(Span(0, 0, 0))
+  }
+
+  private def patchToString(oldToStringDefinition: tpd.DefDef, seqArgs: tpd.Tree)(using Context): tpd.DefDef = {
+    // toRedactedString(this, fqdn.CompanionObject.__redactedFields)
     val toRedactedStringSymbol: Symbol = requiredMethod(TO_REDACTED_STRING)
     val thisRef: tpd.This = tpd.This(oldToStringDefinition.symbol.owner.asClass)
     val newMethodBody = tpd.Apply(tpd.ref(toRedactedStringSymbol), List(thisRef, seqArgs))
 
-    // def toString = toRedactedString(this, Seq[String](field_A, ... , field_X))
+    // def toString = toRedactedString(this, fqdn.CompanionObject.__redactedFields)
     tpd.cpy.DefDef(oldToStringDefinition)(rhs = newMethodBody)
-  }
-
-  private implicit class StringOps(s: String) extends AnyVal {
-    def toConstantLiteral(using Context): tpd.Literal = tpd.Literal(Constant(s))
   }
 }
