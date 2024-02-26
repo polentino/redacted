@@ -169,7 +169,7 @@ def toString(): String =
 
 * [x] define the sequence of redacted fields in a private variable
   * [x] move aforementioned variable in the case class companion object
-* [ ] figure out why doesn't work anymore with inner case classes
+* [ ] figure out why doesn't work anymore with nested case classes
 * [ ] split into two artifacts (lib and compiler plugin)
 * [ ] publish it in maven
 * [ ] add some benchmarks with jmh

@@ -5,7 +5,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 import io.github.polentino.redacted.RedactionWithNestedCaseClass.Inner
 
-class TestPhaseSpec extends AnyFlatSpec {
+class RedactedSpec extends AnyFlatSpec {
 
   behavior of "@redacted"
 
@@ -23,7 +23,6 @@ class TestPhaseSpec extends AnyFlatSpec {
     cp { assert(implicitToString == expected) }
     cp { assert(explicitToString == expected) }
     cp { assert(testing.name == name && testing.age == age && testing.email == email) }
-    cp { assert(RedactionWithoutCompanionObj.something == 123) }
     cp.reportAll()
   }
 
@@ -41,6 +40,7 @@ class TestPhaseSpec extends AnyFlatSpec {
     cp { assert(implicitToString == expected) }
     cp { assert(explicitToString == expected) }
     cp { assert(testing.name == name && testing.age == age && testing.email == email) }
+    cp { assert(RedactionWithCompanionObj.something == 123) }
     cp.reportAll()
   }
 
