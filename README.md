@@ -112,6 +112,7 @@ It also works with nested case classes:
 
 ```scala 3
 case class Wrapper(id: String, @redacted user: User)
+
 val wrapper = Wrapper("id-1", user) // user is the same object defined above
 println(wrapper)
 ```
