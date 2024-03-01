@@ -120,7 +120,8 @@ object PluginOps {
 
   private def patchToString(oldToStringDefinition: tpd.DefDef, seqArgs: tpd.Tree)(using Context): tpd.DefDef = {
     // toRedactedString(this, fqdn.CompanionObject.__redactedFields)
-    val toRedactedStringSymbol: Symbol = requiredMethod(TO_REDACTED_STRING)
+    val pkgSymbol: Symbol = requiredPackage("io.github.polentino.redacted.helpers")
+    val toRedactedStringSymbol: Symbol = pkgSymbol.requiredMethod("toRedactedString")
     val thisRef: tpd.This = tpd.This(oldToStringDefinition.symbol.owner.asClass)
     val newMethodBody = tpd.Apply(tpd.ref(toRedactedStringSymbol), List(thisRef, seqArgs))
 

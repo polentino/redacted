@@ -1,5 +1,18 @@
-ThisBuild / version := "0.2.1-SNAPSHOT"
+ThisBuild / version := "0.2.2.1-SNAPSHOT"
 ThisBuild / scalaVersion := "3.1.3"
+
+ThisBuild / publishMavenStyle := true
+ThisBuild / crossPaths := false
+ThisBuild / versionScheme := Some("early-semver")
+ThisBuild / publishTo := Some(
+  "GitHub Package Registry" at "https://maven.pkg.github.com/polentino/redacted"
+)
+ThisBuild / credentials +=
+  Credentials(
+    "GitHub Package Registry",
+    "maven.pkg.github.com",
+    "polentino",
+    sys.env.getOrElse("GITHUB_TOKEN", "???"))
 
 inThisBuild(
   List(
@@ -23,10 +36,10 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val root = (project in file("."))
   .settings(
-    name := "redacted",
+    name := "redacted-root",
     publish / skip := true
   )
-  .aggregate(library, plugin)
+  .aggregate(redactedLibrary, redactedCompilerPlugin)
 
 val scalafixSettings = Seq(
   scalafixDependencies += "com.liancheng" %% "organize-imports" % "0.6.0",
@@ -34,17 +47,17 @@ val scalafixSettings = Seq(
   semanticdbVersion := scalafixSemanticdb.revision
 )
 
-lazy val library = (project in file("library"))
-  .settings(name := "redacted-annotation-library")
+lazy val redactedLibrary = (project in file("library"))
+  .settings(name := "redacted")
   .settings(scalafixSettings)
 
-lazy val plugin = (project in file("plugin"))
+lazy val redactedCompilerPlugin = (project in file("plugin"))
   .settings(name := "redacted-compiler-plugin")
   .settings(scalafixSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.scala-lang" %% "scala3-compiler" % scalaVersion.value % "provided",
-      "org.scalatest"  %% "scalatest"       % "3.2.17"           % "test"
+      "org.scala-lang" %% "scala3-compiler" % scalaVersion.value % Provided,
+      "org.scalatest"  %% "scalatest"       % "3.2.17" % "test"
     ),
     Compile / managedSources ++= {
       val baseDir = baseDirectory.value / ".." / "library" / "src" / "main" / "scala"
