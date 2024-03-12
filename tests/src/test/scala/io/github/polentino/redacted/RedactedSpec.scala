@@ -44,7 +44,7 @@ class RedactedSpec extends AnyFlatSpec {
     cp.reportAll()
   }
 
-  it should "work with nested case classes" in {
+  it should "work with nested case classes in object" in {
     val id = "id-1"
     val name1 = "Diego"
     val age1 = 999
@@ -66,6 +66,31 @@ class RedactedSpec extends AnyFlatSpec {
         testing.inner1.age == age1 &&
         testing.inner2.name == name2 &&
         testing.inner2.age == age2)
+    }
+    cp.reportAll()
+  }
+
+  it should "work with nested case classes in case class" in {
+    case class Inner(userId: String, @redacted balance: Int)
+    case class Outer(inner: Inner)
+
+    val userId = "user-123"
+    val balance = 123_456_789
+    val expected = s"Outer(Inner($userId,***))"
+
+    val testing = Outer(Inner(userId, balance))
+    val implicitToString = s"$testing"
+    val explicitToString = testing.toString
+
+    val cp = new Checkpoint
+
+    cp { assert(implicitToString == expected) }
+    cp { assert(explicitToString == expected) }
+    cp {
+      assert(
+        testing.inner.userId == userId &&
+        testing.inner.balance == balance
+      )
     }
     cp.reportAll()
   }
