@@ -168,7 +168,7 @@ def toString(): String =
 * [x] define the sequence of redacted fields in a private variable
   * [x] move aforementioned variable in the case class companion object
 * [ ] figure out why doesn't work anymore with nested case classes
-* [x] split into two artifacts (lib and compiler plugin)
+* [x] split into three artifacts (lib, compiler plugin and tests)
   * [ ] find a better alternative instead of using `managedSources`
 * [ ] publish library and compiler plugin to maven
 * [ ] add some benchmarks with jmh

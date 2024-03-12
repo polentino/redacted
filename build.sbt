@@ -1,4 +1,4 @@
-ThisBuild / version := "0.2.2.1-SNAPSHOT"
+ThisBuild / version := "0.2.2.4-SNAPSHOT"
 ThisBuild / scalaVersion := "3.1.3"
 
 ThisBuild / publishMavenStyle := true
@@ -39,7 +39,7 @@ lazy val root = (project in file("."))
     name := "redacted-root",
     publish / skip := true
   )
-  .aggregate(redactedLibrary, redactedCompilerPlugin)
+  .aggregate(redactedLibrary, redactedCompilerPlugin, redactedTests)
 
 val scalafixSettings = Seq(
   scalafixDependencies += "com.liancheng" %% "organize-imports" % "0.6.0",
@@ -49,24 +49,38 @@ val scalafixSettings = Seq(
 
 lazy val redactedLibrary = (project in file("library"))
   .settings(name := "redacted")
-  .settings(scalafixSettings)
+  .settings(
+    scalafixSettings,
+    Test / skip := true
+  )
 
 lazy val redactedCompilerPlugin = (project in file("plugin"))
-  .settings(name := "redacted-compiler-plugin")
+  .dependsOn(redactedLibrary)
+  .settings(name := "redacted-plugin")
   .settings(scalafixSettings)
   .settings(
-    libraryDependencies ++= Seq(
-      "org.scala-lang" %% "scala3-compiler" % scalaVersion.value % Provided,
-      "org.scalatest"  %% "scalatest"       % "3.2.17" % "test"
-    ),
-    Compile / managedSources ++= {
-      val baseDir = baseDirectory.value / ".." / "library" / "src" / "main" / "scala"
-      Seq(baseDir / "io" / "github" / "polentino" / "redacted" / "redacted.scala")
+    Test / skip := true,
+    assembly / assemblyJarName := {
+      val assemblyJarFile = (Compile / Keys.`package`).value
+      assemblyJarFile.getName
     },
-    Test / scalacOptions ++= {
-      val jar = (Compile / packageBin).value
-      Seq(s"-Xplugin:${jar.getAbsolutePath}", s"-Jdummy=${jar.lastModified}") // ensures recompile
+    libraryDependencies += "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
+  )
+
+lazy val redactedTests = (project in file("tests"))
+  .dependsOn(redactedLibrary)
+  .settings(name := "redacted-tests")
+  .settings(scalafixSettings)
+  .settings(
+    publish / skip := true,
+    libraryDependencies ++= Seq("org.scalatest" %% "scalatest" % "3.2.17" % Test),
+    scalacOptions ++= {
+      val jar = (redactedCompilerPlugin / assembly).value
+      val addPlugin = "-Xplugin:" + jar.getAbsolutePath
+      val dummy = "-Jdummy=" + jar.lastModified
+      Seq(addPlugin, dummy)
     }
   )
 
-addCommandAlias("fmt", "all scalafmtSbt scalafmtAll test:scalafmtAll; scalafixAll")
+addCommandAlias("fmt", "; scalafmtAll ; scalafmtSbt") // todo scalafix ?
+addCommandAlias("fmtCheck", "; scalafmtCheckAll ; scalafmtSbtCheck")
