@@ -36,50 +36,48 @@ object PluginOps {
     case _                      => None
   }
 
-  def createToStringBody(tree: tpd.TypeDef, template: tpd.Template)(using Context): Try[tpd.Tree] = {
-
+  def createToStringBody(tree: tpd.TypeDef)(using Context): Try[tpd.Tree] = Try {
     val className = tree.name.toString
     val memberNames = tree.symbol.primaryConstructor.paramSymss.flatten
     val annotationSymbol = redactedSymbol
+    val classPrefix = (className + "(").toConstantLiteral
+    val classSuffix = ")".toConstantLiteral
+    val commaSymbol = ",".toConstantLiteral
     val asterisksSymbol = "***".toConstantLiteral
-    val string2: List[tpd.Tree] = memberNames.map(m =>
+    val concatOperator = Names.termName("+")
+
+    val fragments: List[tpd.Tree] = memberNames.map(m =>
       if (m.annotations.exists(_.matches(annotationSymbol))) asterisksSymbol
       else tpd.Select(tpd.This(tree.symbol.asClass), m.name))
 
     def buildToStringTree(fragments: List[tpd.Tree]): tpd.Tree = {
-      val classPrefix = (className + "(").toConstantLiteral
-      val classSuffix = ")".toConstantLiteral
-      val concatString = Names.termName("+")
-      val comma = ",".toConstantLiteral
 
       def concatAll(l: List[tpd.Tree]): List[tpd.Tree] = l match {
         case Nil          => Nil
         case head :: Nil  => List(head)
-        case head :: tail => List(head, comma) ++ concatAll(tail)
+        case head :: tail => List(head, commaSymbol) ++ concatAll(tail)
       }
 
       val res = concatAll(fragments).fold(classPrefix) { case (l, r) =>
-        tpd.Apply(tpd.Select(l, concatString), r :: Nil)
+        tpd.Apply(tpd.Select(l, concatOperator), r :: Nil)
       }
-      tpd.Apply(tpd.Select(res, concatString), classSuffix :: Nil)
+      tpd.Apply(tpd.Select(res, concatOperator), classSuffix :: Nil)
     }
 
-    Try(buildToStringTree(string2))
+    buildToStringTree(fragments)
   }
 
-  def patchToString(template: tpd.Template, tostring: tpd.Tree)(using Context): Try[tpd.Template] = {
-    Try {
-      val newBody = template.body.map {
-        case oldMethodDefinition: tpd.DefDef if oldMethodDefinition.name.toString == TO_STRING_NAME =>
-          tpd.cpy.DefDef(oldMethodDefinition)(rhs = tostring)
-        case otherField => otherField
-      }
-
-      tpd.cpy.Template(template)(body = newBody)
+  def patchToString(template: tpd.Template, toStringTree: tpd.Tree)(using Context): Try[tpd.Template] = Try {
+    val newBody = template.body.map {
+      case oldMethodDefinition: tpd.DefDef if oldMethodDefinition.name.toString == TO_STRING_NAME =>
+        tpd.cpy.DefDef(oldMethodDefinition)(rhs = toStringTree)
+      case otherField => otherField
     }
+
+    tpd.cpy.Template(template)(body = newBody)
   }
 
-  def patchTypeDef(tree: tpd.TypeDef, template: tpd.Template)(using Context) = Try {
+  def patchTypeDef(tree: tpd.TypeDef, template: tpd.Template)(using Context): Try[tpd.TypeDef] = Try {
     tpd.cpy.TypeDef(tree)(rhs = template)
   }
 

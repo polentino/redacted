@@ -26,7 +26,7 @@ final case class PatchToString() extends PluginPhase {
         template <- getTreeTemplate(validatedTree)
           .withLog(s"can't extract proper `tpd.Template` from ${tree.name}")
 
-        toStringBody <- createToStringBody(validatedTree, template)
+        toStringBody <- createToStringBody(validatedTree)
           .withLog(s"couldn't create proper `toString()` body")
 
         newTemplate <- patchToString(template, toStringBody)
@@ -42,8 +42,8 @@ final case class PatchToString() extends PluginPhase {
           report.warning(
             s"""
                  |Dang, couldn't patch properly ${tree.name} :(
-                 |If you believe this is an error: please report the issue, along with a minimum reproducible example, at
-                 |the following link: https://github.com/polentino/redacted/issues/new
+                 |If you believe this is an error: please report the issue, along with a minimum reproducible example,
+                 |at the following link: https://github.com/polentino/redacted/issues/new .
                  |
                  |Thank you 🙏
                  |""".stripMargin,
