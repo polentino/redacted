@@ -48,7 +48,7 @@ object PluginOps {
 
     val fragments: List[tpd.Tree] = memberNames.map(m =>
       if (m.annotations.exists(_.matches(annotationSymbol))) asterisksSymbol
-      else tpd.Select(tpd.This(tree.symbol.asClass), m.name))
+      else tpd.This(tree.symbol.asClass).select(m.name))
 
     def buildToStringTree(fragments: List[tpd.Tree]): tpd.Tree = {
 
@@ -58,10 +58,8 @@ object PluginOps {
         case head :: tail => List(head, commaSymbol) ++ concatAll(tail)
       }
 
-      val res = concatAll(fragments).fold(classPrefix) { case (l, r) =>
-        tpd.Apply(tpd.Select(l, concatOperator), r :: Nil)
-      }
-      tpd.Apply(tpd.Select(res, concatOperator), classSuffix :: Nil)
+      val res = concatAll(fragments).fold(classPrefix) { case (l, r) => l.select(concatOperator).appliedTo(r) }
+      res.select(concatOperator).appliedTo(classSuffix)
     }
 
     buildToStringTree(fragments)
