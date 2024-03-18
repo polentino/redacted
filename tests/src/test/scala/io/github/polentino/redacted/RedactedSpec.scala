@@ -94,4 +94,21 @@ class RedactedSpec extends AnyFlatSpec {
     }
     cp.reportAll()
   }
+
+  it should "work with a redacted case class of just one member" in {
+    case class OneMember(@redacted name: String)
+    val name = "berfu"
+    val expected = "OneMember(***)"
+
+    val testing = OneMember(name)
+    val implicitToString = s"$testing"
+    val explicitToString = testing.toString
+
+    val cp = new Checkpoint
+
+    cp { assert(implicitToString == expected) }
+    cp { assert(explicitToString == expected) }
+    cp { assert(testing.name == name) }
+    cp.reportAll()
+  }
 }

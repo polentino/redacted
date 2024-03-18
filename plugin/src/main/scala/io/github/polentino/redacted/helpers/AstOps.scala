@@ -19,8 +19,6 @@ object AstOps {
   }
 
   extension (symbol: Symbol)(using Context) {
-    def isCompanionObject: Boolean = symbol.isAllOf(Flags.SyntheticModule) || symbol.is(Flags.Module)
-    def hasCompanionCaseClass: Boolean = symbol.linkedClass.is(Flags.CaseClass)
 
     def redactedFields: List[String] = {
       val redactedType = redactedSymbol
@@ -32,7 +30,5 @@ object AstOps {
 
   extension (tree: tpd.TypeDef)(using Context) {
     def isCaseClass: Boolean = tree.symbol.is(Flags.CaseClass)
-    def isCompanionObject: Boolean = tree.symbol.isCompanionObject
-    def hasCompanionCaseClass: Boolean = tree.symbol.hasCompanionCaseClass
   }
 }
