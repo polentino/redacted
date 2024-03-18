@@ -141,23 +141,12 @@ The way it's done is the following:
 [PatchToString](plugin/src/main/scala/io/github/polentino/redacted/phases/PatchToString.scala) phase will inspect every
 class type definition and check whether the class being analysed is a `case class`, and if it has at least one of its
 fields annotated with `@redacted` ; if that's the case, it will then proceed to rewrite the default `toString`
-implementation by selectively returning either the `***` string, or the value of the field, depending on the presence (
-or not) of that annotation.
-
-After `EnrichCompanionObject` phase is
-completed, [PatchToString](plugin/src/main/scala/io/github/polentino/redacted/phases/PatchToString.scala) phase will
-then be
-executed: for each case class that contains `@redacted` fields, this phase will:
-
-1. get a reference to `__redactedFields` from its companion object,
-2. patch the `toString` body to call the plugin specific implementation, and
-3. pass the reference to `__redactedFields` as its second argument
-
-The end result will be something like this:
+implementation by selectively returning either the `***` string, or the value of the field, depending on the presence
+(or not) of that annotation.
 
 ```scala 3
 def toString(): String =
-  io.github.polentino.redacted.helpers.toRedactedString(this, User.__redactedFields)
+  "<class name>(" + this.<field not redacted> + ",***" + ... + ")"
 ```
 
 ## Improvements
