@@ -89,7 +89,7 @@ class RedactedSpec extends AnyFlatSpec {
     cp {
       assert(
         testing.inner.userId == userId &&
-        testing.inner.balance == balance
+          testing.inner.balance == balance
       )
     }
     cp.reportAll()

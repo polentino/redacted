@@ -1,88 +1,109 @@
 package io.github.polentino.redacted.helpers
 
 import dotty.tools.dotc.*
-import dotty.tools.dotc.ast.*
+import dotty.tools.dotc.ast.{tpd, *}
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.ast.untpd.Modifiers
+import dotty.tools.dotc.core.*
+import dotty.tools.dotc.core.Constants.Constant
 import dotty.tools.dotc.core.Contexts.*
 import dotty.tools.dotc.core.Names.TermName
 import dotty.tools.dotc.core.Symbols.*
-import dotty.tools.dotc.core.*
-import dotty.tools.dotc.core.Constants.Constant
 import dotty.tools.dotc.util.Spans.Span
 import io.github.polentino.redacted.helpers.AstOps.*
+
+import scala.util.{Failure, Success, Try}
 
 object PluginOps {
   private val TO_STRING_NAME = "toString"
 
-  /** Checks if all preconditions to start the redaction process are met and, if so, executes `withValidTree`
-    *
-    * @param tree
-    *   the tree that will be checked whether it has redacted fields or not
-    * @param withValidTree
-    *   the action to perform in case there are redacted fields
-    * @param Context
-    *   implicit param
-    * @return
-    *   the modified case class `TypeDef` if the conditions were met, or the original one otherwise
-    */
-  def analyseTree(tree: tpd.TypeDef)(withValidTree: List[String] => tpd.TypeDef)(using Context): tpd.TypeDef =
+  def validate(tree: tpd.TypeDef)(using Context): Option[tpd.TypeDef] = for {
+    caseClassType <- validateTypeDef(tree)
+      .withLogVerbose(s"${tree.name} isn't a case class")
+    _ <- getRedactedFields(caseClassType)
+      .withLogVerbose(s"${tree.name} doesn't contain `@redacted` fields")
+  } yield caseClassType
+
+  private def validateTypeDef(tree: tpd.TypeDef)(using Context) = Option.when(tree.isCaseClass)(tree)
+
+  private def getRedactedFields(tree: tpd.TypeDef)(using Context): Option[List[String]] = {
     val redactedFields = tree.symbol.redactedFields
-    if (redactedFields.nonEmpty) {
-      withValidTree(redactedFields)
-    } else tree
-  
+    Option.when(redactedFields.nonEmpty)(redactedFields)
+  }
 
-  /** Given a case class where `field_A, ..., field_X` are all annotated with ``@redacted``, this method will detect the
-    * presence of a `toString` method and patch it in order to not print its sensitive fields
-    *
-    * @param tree
-    *   the typed AST representation of the case class we want to redact
-    * @param ref
-    *   a reference to the variable `__redactedFields` contained in `tree` companion object
-    * @param Context
-    *   implicit param
-    * @return
-    *   the updated AST definition for the case class, with the patched `toString` method
-    */
-  def patchToStringMethod(tree: tpd.TypeDef, redactedMembers: List[String])(using ctx: Context): tpd.TypeDef = {
-    tree.rhs match {
-      case template: tpd.Template =>
-        val newBody = template.body.map {
-          case oldMethodDefinition: tpd.DefDef if oldMethodDefinition.name.toString == TO_STRING_NAME =>
-            val className = tree.name.toString
-            val memberNames = tree.symbol.primaryConstructor.paramSymss.flatten.toList.map(_.name.toString)
-            val string2: List[tpd.Tree] = memberNames.map(m =>
-              if (redactedMembers.contains(m)) toConstantLiteral("***")
-              else tpd.This(tree.symbol.asClass).select(Names.termName(m))
-            )
+  def getTreeTemplate(tree: tpd.TypeDef)(using Context): Option[tpd.Template] = tree.rhs match {
+    case template: tpd.Template => Some(template)
+    case _                      => None
+  }
 
-            def stringify(list: List[tpd.Tree]): tpd.Tree = {
-              val plusString = Names.termName("+")
-              val comma = toConstantLiteral(",")
+  def createToStringBody(tree: tpd.TypeDef, template: tpd.Template)(using Context): Try[tpd.Tree] = {
 
-              def loop(l: List[tpd.Tree]): List[tpd.Tree] =
-                l match {
-                  case Nil => Nil
-                  case head :: Nil => List(head)
-                  case head :: tail => List(head, comma) ++ loop(tail)
-                }
+    val className = tree.name.toString
+    val memberNames = tree.symbol.primaryConstructor.paramSymss.flatten
+    val annotationSymbol = redactedSymbol
+    val asterisksSymbol = "***".toConstantLiteral
+    val string2: List[tpd.Tree] = memberNames.map(m =>
+      if (m.annotations.exists(_.matches(annotationSymbol))) asterisksSymbol
+      else tpd.Select(tpd.This(tree.symbol.asClass), m.name))
 
-              loop(list).fold(toConstantLiteral(className + "(")) { case (l,r) =>
-                l.select(plusString).appliedTo(r)
-              }.select(plusString).appliedTo(toConstantLiteral(")"))
-            }
-            
-            
-            tpd.cpy.DefDef(oldMethodDefinition)(rhs = stringify(string2))
-          case otherField => otherField
-        }
+    def buildToStringTree(fragments: List[tpd.Tree]): tpd.Tree = {
+      val classPrefix = (className + "(").toConstantLiteral
+      val classSuffix = ")".toConstantLiteral
+      val concatString = Names.termName("+")
+      val comma = ",".toConstantLiteral
 
-        val newTemplate = tpd.cpy.Template(template)(body = newBody)
-        val newTree = tpd.cpy.TypeDef(tree)(rhs = newTemplate)
-        newTree
+      def concatAll(l: List[tpd.Tree]): List[tpd.Tree] = l match {
+        case Nil          => Nil
+        case head :: Nil  => List(head)
+        case head :: tail => List(head, comma) ++ concatAll(tail)
+      }
 
-      case _ => tree
+      val res = concatAll(fragments).fold(classPrefix) { case (l, r) =>
+        tpd.Apply(tpd.Select(l, concatString), r :: Nil)
+      }
+      tpd.Apply(tpd.Select(res, concatString), classSuffix :: Nil)
     }
+
+    Try(buildToStringTree(string2))
+  }
+
+  def patchToString(template: tpd.Template, tostring: tpd.Tree)(using Context): Try[tpd.Template] = {
+    Try {
+      val newBody = template.body.map {
+        case oldMethodDefinition: tpd.DefDef if oldMethodDefinition.name.toString == TO_STRING_NAME =>
+          tpd.cpy.DefDef(oldMethodDefinition)(rhs = tostring)
+        case otherField => otherField
+      }
+
+      tpd.cpy.Template(template)(body = newBody)
+    }
+  }
+
+  def patchTypeDef(tree: tpd.TypeDef, template: tpd.Template)(using Context) = Try {
+    tpd.cpy.TypeDef(tree)(rhs = template)
+  }
+
+  extension [Out](opt: Option[Out]) {
+
+    def withLog(message: String)(using Context): Option[Out] =
+      opt match {
+        case s: Some[Out] => s
+        case None         => report.echo(message); None
+      }
+
+    private def withLogVerbose(message: String)(using Context): Option[Out] =
+      opt match {
+        case s: Some[Out] => s
+        case None         => report.inform(message); None
+      }
+  }
+
+  extension [Out](t: Try[Out]) {
+
+    def withLog(message: String)(using Context): Option[Out] =
+      t match {
+        case Success(value)     => Some(value)
+        case Failure(throwable) => report.echo(s"$message; reason:\n\t${throwable.getMessage}"); None
+      }
   }
 }
