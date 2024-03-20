@@ -5,7 +5,7 @@ import dotty.tools.dotc.plugins.*
 import io.github.polentino.redacted.phases._
 
 class RedactedPlugin extends StandardPlugin {
-  override def init(options: List[String]): List[PluginPhase] = List(EnrichCompanionObject(), PatchToString())
+  override def init(options: List[String]): List[PluginPhase] = List(PatchToString())
 
   override def name: String = "Redacted"
 

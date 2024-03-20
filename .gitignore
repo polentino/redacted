@@ -6,3 +6,4 @@ metals.sbt
 project/project/*
 project/target/*
 target/*
+**/target/*
