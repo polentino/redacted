@@ -40,10 +40,13 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 
 ## Usage
 
-in your `project/plugins.sbt` file, add the following line (once it will be published :)
+in your `build.sbt` file, add the following lines (once it will be published :)
 
 ```scala 3
-addCompilerPlugin("io.github.polentino" % "redacted" % "0.0.1")
+libraryDependencies ++= Seq(
+  "io.github.polentino"  % "redacted" % redactedVersion,
+  compilerPlugin("io.github.polentino"  % "redacted-plugin" % redactedVersion)
+)
 ```
 
 and then, in your case class definitions
@@ -156,7 +159,8 @@ def toString(): String =
 * [x] figure out why doesn't work anymore with nested case classes
 * [x] split into three artifacts (lib, compiler plugin and tests)
   * [x] find a better alternative instead of using `managedSources`
-* [ ] refactor codebase
+* [x] refactor codebase
+* [ ] create Sbt plugin
 * [ ] publish library and compiler plugin to maven
 * [ ] add some benchmarks with jmh
 

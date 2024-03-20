@@ -159,25 +159,22 @@ object PluginOps {
 
   extension [Out](opt: Option[Out]) {
 
-    def withLog(message: String)(using Context): Option[Out] =
-      opt match {
-        case s: Some[Out] => s
-        case None         => report.echo(message); None
-      }
+    def withLog(message: String)(using Context): Option[Out] = opt match {
+      case s: Some[Out] => s
+      case None         => report.echo(message); None
+    }
 
-    private def withLogVerbose(message: String)(using Context): Option[Out] =
-      opt match {
-        case s: Some[Out] => s
-        case None         => report.inform(message); None
-      }
+    private def withLogVerbose(message: String)(using Context): Option[Out] = opt match {
+      case s: Some[Out] => s
+      case None         => report.inform(message); None
+    }
   }
 
   extension [Out](t: Try[Out]) {
 
-    def withLog(message: String)(using Context): Option[Out] =
-      t match {
-        case Success(value)     => Some(value)
-        case Failure(throwable) => report.echo(s"$message; reason:\n\t${throwable.getMessage}"); None
-      }
+    def withLog(message: String)(using Context): Option[Out] = t match {
+      case Success(value)     => Some(value)
+      case Failure(throwable) => report.echo(s"$message; reason:\n\t${throwable.getMessage}"); None
+    }
   }
 }

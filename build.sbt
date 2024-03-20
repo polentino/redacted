@@ -1,18 +1,15 @@
-ThisBuild / version := "0.2.2.4-SNAPSHOT"
+ThisBuild / version := "0.3.0-SNAPSHOT"
 ThisBuild / scalaVersion := "3.1.3"
 
 ThisBuild / publishMavenStyle := true
 ThisBuild / crossPaths := false
 ThisBuild / versionScheme := Some("early-semver")
-ThisBuild / publishTo := Some(
-  "GitHub Package Registry" at "https://maven.pkg.github.com/polentino/redacted"
-)
-ThisBuild / credentials +=
-  Credentials(
-    "GitHub Package Registry",
-    "maven.pkg.github.com",
-    "polentino",
-    sys.env.getOrElse("GITHUB_TOKEN", "???"))
+ThisBuild / publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/polentino/redacted")
+ThisBuild / credentials += Credentials(
+  "GitHub Package Registry",
+  "maven.pkg.github.com",
+  "polentino",
+  sys.env.getOrElse("GITHUB_TOKEN", "???"))
 
 inThisBuild(
   List(
