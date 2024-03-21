@@ -149,7 +149,7 @@ implementation by selectively returning either the `***` string, or the value of
 
 ```scala 3
 def toString(): String =
-  "<class name>(" + this.<field not redacted> + ",***" + ... + ")"
+  "<class name>(" + this.<field not redacted> + "," + "***" + ... + ")"
 ```
 
 ## Improvements
