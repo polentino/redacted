@@ -1,4 +1,4 @@
-ThisBuild / version := "0.3.0-SNAPSHOT"
+ThisBuild / version := "0.3.0"
 ThisBuild / scalaVersion := "3.1.3"
 
 ThisBuild / publishMavenStyle := true
@@ -79,5 +79,5 @@ lazy val redactedTests = (project in file("tests"))
     }
   )
 
-addCommandAlias("fmt", "; scalafmtAll ; scalafmtSbt") // todo scalafix ?
+addCommandAlias("fmt", "; scalafix; scalafmtAll; scalafmtSbt")
 addCommandAlias("fmtCheck", "; scalafmtCheckAll ; scalafmtSbtCheck")

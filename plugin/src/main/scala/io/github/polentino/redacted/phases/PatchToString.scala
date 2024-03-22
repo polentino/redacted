@@ -2,15 +2,15 @@ package io.github.polentino.redacted.phases
 
 import dotty.tools.dotc.ast.tpd
 import dotty.tools.dotc.core.Contexts.*
-import dotty.tools.dotc.core.Symbols
-import dotty.tools.dotc.core.Names
+import dotty.tools.dotc.core.{Names, Symbols}
 import dotty.tools.dotc.plugins.PluginPhase
 import dotty.tools.dotc.report
 import dotty.tools.dotc.transform.Pickler
-import io.github.polentino.redacted.helpers.PluginOps.*
-import io.github.polentino.redacted.helpers.AstOps.*
 
 import scala.util.Try
+
+import io.github.polentino.redacted.helpers.AstOps.*
+import io.github.polentino.redacted.helpers.PluginOps.*
 
 final case class PatchToString() extends PluginPhase {
 
