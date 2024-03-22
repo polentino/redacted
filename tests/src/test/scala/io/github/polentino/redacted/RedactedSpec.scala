@@ -9,42 +9,47 @@ class RedactedSpec extends AnyFlatSpec {
 
   behavior of "@redacted"
 
-  it should "work with case classes without user-defined companion object" in {
-    val name: String = "Berfu"
-    val age = 26
-    val email: String = "berfu@gmail.com"
-    val expected = s"RedactionWithoutCompanionObj(***,$age,***)"
+  it should "work with a redacted case class of just one member" in {
+    case class OneMember(@redacted name: String)
+    val name = "berfu"
+    val expected = "OneMember(***)"
 
-    val testing = RedactionWithoutCompanionObj(name, age, email)
+    val testing = OneMember(name)
     val implicitToString = s"$testing"
     val explicitToString = testing.toString
-    val cp = new Checkpoint
 
+    val cp = new Checkpoint
     cp { assert(implicitToString == expected) }
     cp { assert(explicitToString == expected) }
-    cp { assert(testing.name == name && testing.age == age && testing.email == email) }
+    cp { assert(testing.name == name) }
     cp.reportAll()
   }
 
-  it should "work with case classes with user-defined companion object" in {
-    val name: String = "Berfu"
-    val age = 26
-    val email: String = "berfu@gmail.com"
-    val expected = s"RedactionWithCompanionObj(***,$age,***)"
+  it should "work with a redacted case class with many members" in {
+    case class ManyMembers(field1: String, @redacted field2: String, @redacted field3: String, field4: String)
+    val field1 = "field-1"
+    val field2 = "field-2"
+    val field3 = "field-3"
+    val field4 = "field-4"
+    val expected = s"ManyMembers($field1,***,***,$field4)"
 
-    val testing = RedactionWithCompanionObj(name, age, email)
+    val testing = ManyMembers(field1, field2, field3, field4)
     val implicitToString = s"$testing"
     val explicitToString = testing.toString
-    val cp = new Checkpoint
 
+    val cp = new Checkpoint
     cp { assert(implicitToString == expected) }
     cp { assert(explicitToString == expected) }
-    cp { assert(testing.name == name && testing.age == age && testing.email == email) }
-    cp { assert(RedactionWithCompanionObj.something == 123) }
+    cp {
+      assert(testing.field1 == field1 &&
+        testing.field2 == field2 &&
+        testing.field3 == field3 &&
+        testing.field4 == field4)
+    }
     cp.reportAll()
   }
 
-  it should "work with nested case classes in object" in {
+  it should "work with nested case classes" in {
     val id = "id-1"
     val name1 = "Diego"
     val age1 = 999
@@ -57,7 +62,6 @@ class RedactedSpec extends AnyFlatSpec {
     val explicitToString = testing.toString
 
     val cp = new Checkpoint
-
     cp { assert(implicitToString == expected) }
     cp { assert(explicitToString == expected) }
     cp {
@@ -73,7 +77,6 @@ class RedactedSpec extends AnyFlatSpec {
   it should "work with nested case classes in case class" in {
     case class Inner(userId: String, @redacted balance: Int)
     case class Outer(inner: Inner)
-
     val userId = "user-123"
     val balance = 123_456_789
     val expected = s"Outer(Inner($userId,***))"
@@ -83,7 +86,6 @@ class RedactedSpec extends AnyFlatSpec {
     val explicitToString = testing.toString
 
     val cp = new Checkpoint
-
     cp { assert(implicitToString == expected) }
     cp { assert(explicitToString == expected) }
     cp {
@@ -92,23 +94,6 @@ class RedactedSpec extends AnyFlatSpec {
           testing.inner.balance == balance
       )
     }
-    cp.reportAll()
-  }
-
-  it should "work with a redacted case class of just one member" in {
-    case class OneMember(@redacted name: String)
-    val name = "berfu"
-    val expected = "OneMember(***)"
-
-    val testing = OneMember(name)
-    val implicitToString = s"$testing"
-    val explicitToString = testing.toString
-
-    val cp = new Checkpoint
-
-    cp { assert(implicitToString == expected) }
-    cp { assert(explicitToString == expected) }
-    cp { assert(testing.name == name) }
     cp.reportAll()
   }
 }
