@@ -2,113 +2,109 @@ package io.github.polentino.redacted
 
 import org.scalatest.Checkpoints.*
 import org.scalatest.flatspec.AnyFlatSpec
-
 import io.github.polentino.redacted.RedactionWithNestedCaseClass.Inner
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class RedactedSpec extends AnyFlatSpec {
+import java.util.UUID
+
+class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
 
   behavior of "@redacted"
 
-  it should "work with case classes without user-defined companion object" in {
-    val name: String = "Berfu"
-    val age = 26
-    val email: String = "berfu@gmail.com"
-    val expected = s"RedactionWithoutCompanionObj(***,$age,***)"
+  it should "work with a redacted case class of just one member" in {
+    case class OneMember(@redacted name: String)
 
-    val testing = RedactionWithoutCompanionObj(name, age, email)
-    val implicitToString = s"$testing"
-    val explicitToString = testing.toString
-    val cp = new Checkpoint
+    forAll { (name: String) =>
+      val expected = "OneMember(***)"
+      val testing = OneMember(name)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
 
-    cp { assert(implicitToString == expected) }
-    cp { assert(explicitToString == expected) }
-    cp { assert(testing.name == name && testing.age == age && testing.email == email) }
-    cp.reportAll()
-  }
-
-  it should "work with case classes with user-defined companion object" in {
-    val name: String = "Berfu"
-    val age = 26
-    val email: String = "berfu@gmail.com"
-    val expected = s"RedactionWithCompanionObj(***,$age,***)"
-
-    val testing = RedactionWithCompanionObj(name, age, email)
-    val implicitToString = s"$testing"
-    val explicitToString = testing.toString
-    val cp = new Checkpoint
-
-    cp { assert(implicitToString == expected) }
-    cp { assert(explicitToString == expected) }
-    cp { assert(testing.name == name && testing.age == age && testing.email == email) }
-    cp { assert(RedactionWithCompanionObj.something == 123) }
-    cp.reportAll()
-  }
-
-  it should "work with nested case classes in object" in {
-    val id = "id-1"
-    val name1 = "Diego"
-    val age1 = 999
-    val name2 = "Berfu"
-    val age2 = 888
-    val expected = s"RedactionWithNestedCaseClass($id,***,Inner(***,$age2))"
-
-    val testing = RedactionWithNestedCaseClass(id, Inner(name1, age1), Inner(name2, age2))
-    val implicitToString = s"$testing"
-    val explicitToString = testing.toString
-
-    val cp = new Checkpoint
-
-    cp { assert(implicitToString == expected) }
-    cp { assert(explicitToString == expected) }
-    cp {
-      assert(testing.id == id &&
-        testing.inner1.name == name1 &&
-        testing.inner1.age == age1 &&
-        testing.inner2.name == name2 &&
-        testing.inner2.age == age2)
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp { assert(testing.name == name) }
+      cp.reportAll()
     }
-    cp.reportAll()
+  }
+
+  it should "work with a redacted case class with many members" in {
+    case class ManyMembers(field1: String, @redacted field2: String, @redacted field3: String, field4: String)
+
+    forAll { (field1: String, field2: String, field3: String, field4: String) =>
+      val expected = s"ManyMembers($field1,***,***,$field4)"
+      val testing = ManyMembers(field1, field2, field3, field4)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(testing.field1 == field1 &&
+          testing.field2 == field2 &&
+          testing.field3 == field3 &&
+          testing.field4 == field4)
+      }
+      cp.reportAll()
+    }
+  }
+
+  it should "work with case class nested in companion object" in {
+    forAll { (id: String, name1: String, age1: Int, name2: String, age2: Int) =>
+      val expected = s"RedactionWithNestedCaseClass($id,***,Inner(***,$age2))"
+      val testing = RedactionWithNestedCaseClass(id, Inner(name1, age1), Inner(name2, age2))
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(testing.id == id &&
+          testing.inner1.name == name1 &&
+          testing.inner1.age == age1 &&
+          testing.inner2.name == name2 &&
+          testing.inner2.age == age2)
+      }
+      cp.reportAll()
+    }
   }
 
   it should "work with nested case classes in case class" in {
     case class Inner(userId: String, @redacted balance: Int)
     case class Outer(inner: Inner)
 
-    val userId = "user-123"
-    val balance = 123_456_789
-    val expected = s"Outer(Inner($userId,***))"
+    forAll { (userId: String, balance: Int) =>
+      val expected = s"Outer(Inner($userId,***))"
+      val testing = Outer(Inner(userId, balance))
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
 
-    val testing = Outer(Inner(userId, balance))
-    val implicitToString = s"$testing"
-    val explicitToString = testing.toString
-
-    val cp = new Checkpoint
-
-    cp { assert(implicitToString == expected) }
-    cp { assert(explicitToString == expected) }
-    cp {
-      assert(
-        testing.inner.userId == userId &&
-          testing.inner.balance == balance
-      )
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(
+          testing.inner.userId == userId &&
+            testing.inner.balance == balance
+        )
+      }
+      cp.reportAll()
     }
-    cp.reportAll()
   }
 
-  it should "work with a redacted case class of just one member" in {
-    case class OneMember(@redacted name: String)
-    val name = "berfu"
-    val expected = "OneMember(***)"
+  it must "not change the behavior of `hashCode`" in {
+    final case class TestClass(uuid: UUID, name: String, age: Int)
+    object RedactedTestClass {
+      final case class TestClass(uuid: UUID, @redacted name: String, @redacted age: Int)
+    }
 
-    val testing = OneMember(name)
-    val implicitToString = s"$testing"
-    val explicitToString = testing.toString
+    forAll { (uuid: UUID, name: String, age: Int) =>
+      val testClass = TestClass(uuid, name, age)
+      val redactedTestClass = RedactedTestClass.TestClass(uuid, name, age)
 
-    val cp = new Checkpoint
-
-    cp { assert(implicitToString == expected) }
-    cp { assert(explicitToString == expected) }
-    cp { assert(testing.name == name) }
-    cp.reportAll()
+      assert(testClass.hashCode() == redactedTestClass.hashCode())
+    }
   }
 }
