@@ -70,7 +70,10 @@ lazy val redactedTests = (project in file("tests"))
   .settings(scalafixSettings)
   .settings(
     publish / skip := true,
-    libraryDependencies ++= Seq("org.scalatest" %% "scalatest" % "3.2.17" % Test),
+    libraryDependencies ++= Seq(
+      "org.scalatest"     %% "scalatest"       % "3.2.17"   % Test,
+      "org.scalatestplus" %% "scalacheck-1-17" % "3.2.17.0" % Test
+    ),
     scalacOptions ++= {
       val jar = (redactedCompilerPlugin / assembly).value
       val addPlugin = "-Xplugin:" + jar.getAbsolutePath
