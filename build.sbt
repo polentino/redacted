@@ -60,7 +60,7 @@ val crossCompileSettings = scalafixSettings ++ Seq(
   Test / skip := true,
   crossTarget := target.value / s"scala-${scalaVersion.value}", // workaround for https://github.com/sbt/sbt/issues/5097
   crossVersion := CrossVersion.full,
-  crossScalaVersions := supportedScalaVersions,
+  crossScalaVersions := supportedScalaVersions
 )
 
 lazy val redactedLibrary = (project in file("library"))
