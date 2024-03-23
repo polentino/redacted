@@ -45,7 +45,7 @@ in your `build.sbt` file, add the following lines (once it will be published :)
 ```scala 3
 libraryDependencies ++= Seq(
   "io.github.polentino"  % "redacted" % redactedVersion,
-  compilerPlugin("io.github.polentino"  % "redacted-plugin" % redactedVersion)
+  compilerPlugin("io.github.polentino"  % "redacted-plugin" % redactedVersion cross CrossVersion.full)
 )
 ```
 
