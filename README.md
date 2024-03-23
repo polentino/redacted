@@ -1,6 +1,12 @@
+![Actions Status](https://github.com/polentino/redacted/workflows/Scala%20CI/badge.svg)
+![GitHub Tag](https://img.shields.io/github/v/tag/polentino/redacted?sort=semver&label=Latest%20Tag&color=blue)
+
+
 # Redacted
 
-> Prevents leaking sensitive fields defined inside `case class`
+> Prevents leaking sensitive fields defined inside `case class`.
+
+![Simple example of @redacted usage](images/redacted-example.png "Sample usage")
 
 In Scala, `case class`(es) are omnipresent: they are the building blocks for complex business domain models, due to how
 easily they can be defined and instantiated; on top of that, the Scala compiler provides a convenient `toString` method
@@ -40,9 +46,10 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 
 ## Usage
 
-in your `build.sbt` file, add the following lines (once it will be published :)
+in your `build.sbt` file, add the following lines
 
 ```scala 3
+resolvers += "GitHub" at "https://maven.pkg.github.com/polentino/redacted"
 libraryDependencies ++= Seq(
   "io.github.polentino"  % "redacted" % redactedVersion,
   compilerPlugin("io.github.polentino"  % "redacted-plugin" % redactedVersion cross CrossVersion.full)
@@ -61,8 +68,7 @@ case class User(id: UUID, nickname: String, @redacted email: String)
 
 That's all!
 
-From now on, every time you'll try to dump the whole object,or invoke `toString` method, something like this will
-happen:
+From now on, every time you'll try to dump the whole object,or invoke `toString` method
 
 ```scala 3
 val headers: HttpHeaders = HttpHeaders(
@@ -80,18 +86,18 @@ println(headers)
 println(user)
 ```
 
-will print
-> $ HttpHeaders(d58b6a78-5411-4bd4-a0d3-e1ed38b579c4, ***, Seq(it_IT, en_US), corr - id - 123)  
+this will actually be printed
+> $ HttpHeaders(d58b6a78-5411-4bd4-a0d3-e1ed38b579c4, ***, Seq(it_IT, en_US), corr-id-123)  
 > $ User(8b2d4570-d043-473b-a56d-fe98105ccc2b, polentino911, ***)
 
-but the actual content of each individual field won't be modified, i.e. this
+But, of course, accessing the field itself will return its content, i.e.
 
 ```scala 3
 println(headers.apiKey)
 println(user.email)
 ```
 
-will still print the real values
+will still print the real values:
 > $ abcdefghijklmnopqrstuvwxyz   
 > $ polentino911@somemail.com
 
@@ -131,7 +137,7 @@ Given a case class with at least one field annotated with `@redacted`, i.e.
 final case class User(id: UUID, @redacted name: String)
 ```
 
-this compiler plugin will generate the following code
+the compiler plugin will replace the default implementation of its `toString` method with this
 
 ```scala 3
 final case class User(id: UUID, @redacted name: String) {
@@ -145,7 +151,7 @@ The way it's done is the following:
 class type definition and check whether the class being analysed is a `case class`, and if it has at least one of its
 fields annotated with `@redacted` ; if that's the case, it will then proceed to rewrite the default `toString`
 implementation by selectively returning either the `***` string, or the value of the field, depending on the presence
-(or not) of that annotation.
+(or not) of `@redacted` like so:
 
 ```scala 3
 def toString(): String =
