@@ -7,10 +7,8 @@ import dotty.tools.dotc.core.Contexts.*
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.{Flags, Symbols}
 
-import io.github.polentino.redacted.redacted
-
 object AstOps {
-  private val REDACTED_CLASS: String = classOf[redacted].getCanonicalName
+  private val REDACTED_CLASS: String = "io.github.polentino.redacted.redacted"
 
   def redactedSymbol(using Context): ClassSymbol = Symbols.requiredClass(REDACTED_CLASS)
 

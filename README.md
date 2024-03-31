@@ -1,6 +1,7 @@
 ![Actions Status](https://github.com/polentino/redacted/workflows/Scala%20CI/badge.svg)
-![GitHub Tag](https://img.shields.io/github/v/tag/polentino/redacted?sort=semver&label=Latest%20Tag&color=blue)
-
+![GitHub Tag](https://img.shields.io/github/v/tag/polentino/redacted?sort=semver&label=Latest%20Tag&color=limegreen)
+![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.polentino/redacted_3.1.3?server=https%3A%2F%2Fs01.oss.sonatype.org&label=Sonatype%20-%20redacted&color=blue)
+![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.polentino/redacted-plugin_3.1.3?server=https%3A%2F%2Fs01.oss.sonatype.org&label=Sonatype%20-%20redacted%20plugin&color=blue)
 
 # Redacted
 
@@ -49,10 +50,11 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 in your `build.sbt` file, add the following lines
 
 ```scala 3
-resolvers += "GitHub" at "https://maven.pkg.github.com/polentino/redacted"
+val redactedVersion = // use latest version of the library
+resolvers += "Sonatype OSS Releases" at "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
 libraryDependencies ++= Seq(
-  "io.github.polentino"  % "redacted" % redactedVersion,
-  compilerPlugin("io.github.polentino"  % "redacted-plugin" % redactedVersion cross CrossVersion.full)
+  "io.github.polentino" %% "redacted" % redactedVersion cross CrossVersion.full,
+  compilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion cross CrossVersion.full)
 )
 ```
 
