@@ -1,5 +1,8 @@
-ThisBuild / version := "0.3.1"
 ThisBuild / scalaVersion := "3.1.3"
+
+val organizeImportVersion = "0.6.0"
+val scalaTestVersion = "3.2.17"
+val scalaCheckVersion = "3.2.17.0"
 
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
@@ -10,17 +13,6 @@ val supportedScalaVersions = List(
   "3.3.3",
   "3.4.0"
 )
-
-ThisBuild / crossScalaVersions := supportedScalaVersions
-ThisBuild / publishMavenStyle := true
-ThisBuild / crossPaths := false
-ThisBuild / versionScheme := Some("early-semver")
-ThisBuild / publishTo := Some("GitHub Package Registry" at "https://maven.pkg.github.com/polentino/redacted")
-ThisBuild / credentials += Credentials(
-  "GitHub Package Registry",
-  "maven.pkg.github.com",
-  "polentino",
-  sys.env.getOrElse("GITHUB_TOKEN", "???"))
 
 inThisBuild(
   List(
@@ -46,12 +38,13 @@ lazy val root = (project in file("."))
   .settings(
     name := "redacted-root",
     crossScalaVersions := Nil,
+    test / skip := true,
     publish / skip := true
   )
   .aggregate(redactedLibrary, redactedCompilerPlugin, redactedTests)
 
 val scalafixSettings = Seq(
-  scalafixDependencies += "com.liancheng" %% "organize-imports" % "0.6.0",
+  scalafixDependencies += "com.liancheng" %% "organize-imports" % organizeImportVersion,
   semanticdbEnabled := true,
   semanticdbVersion := scalafixSemanticdb.revision
 )
@@ -68,14 +61,9 @@ lazy val redactedLibrary = (project in file("library"))
   .settings(crossCompileSettings)
 
 lazy val redactedCompilerPlugin = (project in file("plugin"))
-  .dependsOn(redactedLibrary)
   .settings(name := "redacted-plugin")
-  .settings(crossCompileSettings)
   .settings(
-    assembly / assemblyJarName := {
-      val assemblyJarFile = (Compile / Keys.`package`).value
-      assemblyJarFile.getName
-    },
+    crossCompileSettings,
     libraryDependencies += "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
   )
 
@@ -85,19 +73,20 @@ lazy val redactedTests = (project in file("tests"))
   .settings(scalafixSettings)
   .settings(
     publish / skip := true,
+    crossScalaVersions := supportedScalaVersions,
     libraryDependencies ++= Seq(
-      "org.scalatest"     %% "scalatest"       % "3.2.17"   % Test,
-      "org.scalatestplus" %% "scalacheck-1-17" % "3.2.17.0" % Test
+      "org.scalatest"     %% "scalatest"       % scalaTestVersion  % Test,
+      "org.scalatestplus" %% "scalacheck-1-17" % scalaCheckVersion % Test
     ),
-    scalacOptions ++= {
-      val jar = (redactedCompilerPlugin / assembly).value
+    Test / scalacOptions ++= {
+      val jar = (redactedCompilerPlugin / Compile / packageBin).value
       val addPlugin = "-Xplugin:" + jar.getAbsolutePath
       val dummy = "-Jdummy=" + jar.lastModified
       Seq(addPlugin, dummy)
     }
   )
 
-addCommandAlias("testAll", "; +test")
-addCommandAlias("publishAll", "; +publish")
+addCommandAlias("testAll", "; clean; +test")
 addCommandAlias("fmt", "; scalafix; scalafmtAll; scalafmtSbt")
 addCommandAlias("fmtCheck", "; scalafmtCheckAll ; scalafmtSbtCheck")
+addCommandAlias("crossReleaseAll", "; clean; +publishSigned; sonatypeBundleRelease")
