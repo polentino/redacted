@@ -51,7 +51,7 @@ in your `build.sbt` file, add the following lines
 
 ```scala 3
 val redactedVersion = // use latest version of the library
-resolvers += "Sonatype OSS Releases" at "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+resolvers += DefaultMavenRepository,
 libraryDependencies ++= Seq(
   "io.github.polentino" %% "redacted" % redactedVersion cross CrossVersion.full,
   compilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion cross CrossVersion.full)
@@ -162,14 +162,7 @@ def toString(): String =
 
 ## Improvements
 
-* [x] define the sequence of redacted fields in a private variable
-  * [x] move aforementioned variable in the case class companion object
-* [x] figure out why doesn't work anymore with nested case classes
-* [x] split into three artifacts (lib, compiler plugin and tests)
-  * [x] find a better alternative instead of using `managedSources`
-* [x] refactor codebase
 * [ ] create Sbt plugin
-* [ ] publish library and compiler plugin to maven
 * [ ] add some benchmarks with jmh
 
 ## Credits
