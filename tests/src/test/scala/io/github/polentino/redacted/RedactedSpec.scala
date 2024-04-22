@@ -1,6 +1,6 @@
 package io.github.polentino.redacted
 
-import org.scalatest.Checkpoints.*
+import org.scalatest.Checkpoints._
 import org.scalatest.flatspec.AnyFlatSpec
 import io.github.polentino.redacted.RedactionWithNestedCaseClass.Inner
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks

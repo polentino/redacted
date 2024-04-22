@@ -6,6 +6,7 @@ val scalaCheckVersion = "3.2.17.0"
 
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
+  "2.13.13",
   "3.1.3",
   "3.2.2",
   "3.3.0",
@@ -64,7 +65,11 @@ lazy val redactedCompilerPlugin = (project in file("plugin"))
   .settings(name := "redacted-plugin")
   .settings(
     crossCompileSettings,
-    libraryDependencies += "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
+    libraryDependencies += (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((3, _)) => "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
+      case Some((2, _)) => "org.scala-lang"  % "scala-compiler"  % scalaVersion.value
+      case v            => throw new Exception(s"Scala version $v not recognised")
+    })
   )
 
 lazy val redactedTests = (project in file("tests"))
@@ -80,9 +85,10 @@ lazy val redactedTests = (project in file("tests"))
     ),
     Test / scalacOptions ++= {
       val jar = (redactedCompilerPlugin / Compile / packageBin).value
-      val addPlugin = "-Xplugin:" + jar.getAbsolutePath
+      val addScala2Plugin = "-Xplugin-require:redacted-plugin"
+      val addScala3Plugin = "-Xplugin:" + jar.getAbsolutePath
       val dummy = "-Jdummy=" + jar.lastModified
-      Seq(addPlugin, dummy)
+      Seq(addScala2Plugin, addScala3Plugin, dummy)
     }
   )
 
