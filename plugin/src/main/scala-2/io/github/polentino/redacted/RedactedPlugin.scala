@@ -1,6 +1,6 @@
 package io.github.polentino.redacted
 
-import scala.tools.nsc.Global
+import scala.tools.nsc._
 import scala.tools.nsc.plugins.Plugin
 import scala.tools.nsc.plugins.PluginComponent
 
