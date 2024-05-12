@@ -94,6 +94,25 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
     }
   }
 
+  it should "ignore `@redacted` annotation on curried parameters" in {
+    case class Curried(age: Int, @redacted name: String)(@redacted email: String)
+
+    forAll { (age: Int, name: String, email: String) =>
+      val expected = s"Curried($age,***)"
+      val testing = Curried(age, name)(email)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(testing.age == age && testing.name == name)
+      }
+      cp.reportAll()
+    }
+  }
+
   it should "work with nested case classes in case class" in {
     case class Inner(userId: String, @redacted balance: Int)
     case class Outer(inner: Inner)

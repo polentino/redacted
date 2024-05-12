@@ -90,10 +90,7 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
     private def getRedactedFields(classDef: ClassDef): Option[List[ValDef]] =
       classDef.impl.body.collectFirst {
         case d: DefDef if d.name.decode == GenBCode.INSTANCE_CONSTRUCTOR_NAME =>
-          d.vparamss.flatMap(_.filter(_.mods.hasAnnotationNamed(redactedTypeName)))
-      } match {
-        case some @ Some(values) if values.nonEmpty => some
-        case _                                      => None
+          d.vparamss.headOption.fold(List.empty[ValDef])(v => v.filter(_.mods.hasAnnotationNamed(redactedTypeName)))
       }
 
     /** Utility method to generate a new `toString` definition based on the parameters marked with `@redacted`.
@@ -140,7 +137,7 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
       */
     private def getAllFields(classDef: ClassDef): List[ValDef] =
       classDef.impl.body.collectFirst {
-        case d: DefDef if d.name.decode == GenBCode.INSTANCE_CONSTRUCTOR_NAME => d.vparamss.flatten
+        case d: DefDef if d.name.decode == GenBCode.INSTANCE_CONSTRUCTOR_NAME => d.vparamss.headOption.getOrElse(Nil)
       }.getOrElse(Nil)
 
     /** Build a new `toString` method definition containing the body passed as parameter.
