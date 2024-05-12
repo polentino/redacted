@@ -71,6 +71,29 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
     }
   }
 
+  it should "not confuse the parameter of a method with the parameter of the main ctor" in {
+    case class TestWrongAnnotationPlacement(name: String, age: Int) {
+
+      /** WRONG! */
+      def toUpper(@redacted name: String): String = name.toUpperCase()
+    }
+
+    forAll { (name: String, age: Int) =>
+      val expected = s"TestWrongAnnotationPlacement($name,$age)"
+      val testing = TestWrongAnnotationPlacement(name, age)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(testing.name == name && testing.age == age)
+      }
+      cp.reportAll()
+    }
+  }
+
   it should "work with nested case classes in case class" in {
     case class Inner(userId: String, @redacted balance: Int)
     case class Outer(inner: Inner)

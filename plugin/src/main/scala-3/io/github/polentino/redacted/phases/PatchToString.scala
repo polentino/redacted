@@ -54,5 +54,5 @@ final case class PatchToString() extends PluginPhase {
 }
 
 object PatchToString {
-  final val name: String = "PatchToString"
+  final val name: String = "patch-tostring-phase"
 }
