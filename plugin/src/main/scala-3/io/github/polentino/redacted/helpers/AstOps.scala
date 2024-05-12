@@ -20,8 +20,10 @@ object AstOps {
 
     def redactedFields: List[String] = {
       val redactedType = redactedSymbol
-      symbol.primaryConstructor.paramSymss.flatten.collect {
-        case s if s.annotations.exists(_.matches(redactedType)) => s.name.toString
+      symbol.primaryConstructor.paramSymss.headOption.fold(List.empty[String]) { params =>
+        params
+          .filter(_.annotations.exists(_.matches(redactedType)))
+          .map(_.name.toString)
       }
     }
   }

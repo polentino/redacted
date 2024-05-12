@@ -51,7 +51,8 @@ in your `build.sbt` file, add the following lines
 
 ```scala 3
 val redactedVersion = // use latest version of the library
-resolvers += DefaultMavenRepository,
+  resolvers += DefaultMavenRepository
+,
 libraryDependencies ++= Seq(
   "io.github.polentino" %% "redacted" % redactedVersion cross CrossVersion.full,
   compilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion cross CrossVersion.full)
@@ -131,6 +132,30 @@ println(wrapper)
 will print
 > Wrapper(id-1,***)
 
+### Note on curried case classes
+
+While it is possible to write something like
+
+```scala 3
+case class Curried(id: String, @redacted name: String)(@redacted email: String)
+```
+
+the `toString` method that Scala compiler generates by default will print only the parameters in the primary
+constructor, meaning that
+
+```scala 3
+val c = Curried(0, "Berfu")("berfu@gmail.com")
+println(c)
+```
+
+will display
+
+```scala 3
+Curried(0,Berfu)
+```
+
+Therefore, the same behavior is being kept in the customized `toString` implementation.
+
 ## How it works
 
 Given a case class with at least one field annotated with `@redacted`, i.e.
@@ -157,7 +182,8 @@ implementation by selectively returning either the `***` string, or the value of
 
 ```scala 3
 def toString(): String =
-  "<class name>(" + this.<field not redacted> + "," + "***" + ... + ")"
+  "<class name>(" + this.< field not redacted > + "," + "***" +
+...+")"
 ```
 
 ## Improvements

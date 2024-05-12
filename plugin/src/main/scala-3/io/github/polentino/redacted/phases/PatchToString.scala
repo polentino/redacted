@@ -22,7 +22,6 @@ final case class PatchToString() extends PluginPhase {
     case None => tree
     case Some(validatedTree) =>
       val maybeNewTypeDef = for {
-
         template <- getTreeTemplate(validatedTree)
           .withLog(s"can't extract proper `tpd.Template` from ${tree.name}")
 
@@ -36,23 +35,24 @@ final case class PatchToString() extends PluginPhase {
           .withLog(s"couldn't patch ${tree.name} template into ${tree.name} typedef")
       } yield result
 
-      maybeNewTypeDef match
+      maybeNewTypeDef match {
         case Some(newTypeDef) => newTypeDef
         case None =>
           report.warning(
             s"""
-                 |Dang, couldn't patch properly ${tree.name} :(
-                 |If you believe this is an error: please report the issue, along with a minimum reproducible example,
-                 |at the following link: https://github.com/polentino/redacted/issues/new .
-                 |
-                 |Thank you 🙏
-                 |""".stripMargin,
+               |Dang, couldn't patch properly ${tree.name} :(
+               |If you believe this is an error: please report the issue, along with a minimum reproducible example,
+               |at the following link: https://github.com/polentino/redacted/issues/new .
+               |
+               |Thank you 🙏
+               |""".stripMargin,
             tree.srcPos
           )
           tree
+      }
   }
 }
 
 object PatchToString {
-  final val name: String = "PatchToString"
+  final val name: String = "patch-tostring-phase"
 }

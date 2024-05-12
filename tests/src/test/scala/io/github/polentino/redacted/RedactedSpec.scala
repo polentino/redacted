@@ -1,6 +1,6 @@
 package io.github.polentino.redacted
 
-import org.scalatest.Checkpoints.*
+import org.scalatest.Checkpoints._
 import org.scalatest.flatspec.AnyFlatSpec
 import io.github.polentino.redacted.RedactionWithNestedCaseClass.Inner
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -66,6 +66,48 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
           testing.inner1.age == age1 &&
           testing.inner2.name == name2 &&
           testing.inner2.age == age2)
+      }
+      cp.reportAll()
+    }
+  }
+
+  it should "not confuse the parameter of a method with the parameter of the main ctor" in {
+    case class TestWrongAnnotationPlacement(name: String, age: Int) {
+
+      /** WRONG! */
+      def toUpper(@redacted name: String): String = name.toUpperCase()
+    }
+
+    forAll { (name: String, age: Int) =>
+      val expected = s"TestWrongAnnotationPlacement($name,$age)"
+      val testing = TestWrongAnnotationPlacement(name, age)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(testing.name == name && testing.age == age)
+      }
+      cp.reportAll()
+    }
+  }
+
+  it should "ignore `@redacted` annotation on curried parameters" in {
+    case class Curried(age: Int, @redacted name: String)(@redacted email: String)
+
+    forAll { (age: Int, name: String, email: String) =>
+      val expected = s"Curried($age,***)"
+      val testing = Curried(age, name)(email)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(testing.age == age && testing.name == name)
       }
       cp.reportAll()
     }
