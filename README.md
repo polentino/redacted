@@ -51,8 +51,8 @@ in your `build.sbt` file, add the following lines
 
 ```scala 3
 val redactedVersion = // use latest version of the library
-  resolvers += DefaultMavenRepository
-,
+resolvers += DefaultMavenRepository
+
 libraryDependencies ++= Seq(
   "io.github.polentino" %% "redacted" % redactedVersion cross CrossVersion.full,
   compilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion cross CrossVersion.full)
@@ -104,7 +104,7 @@ will still print the real values:
 > $ abcdefghijklmnopqrstuvwxyz   
 > $ polentino911@somemail.com
 
-### Nested case class!
+### Nested case class
 
 It also works with nested case classes:
 
@@ -118,7 +118,7 @@ println(wrapper)
 will print
 > Wrapper(id-1,User(8b2d4570-d043-473b-a56d-fe98105ccc2b, polentino911, ***))
 
-### Nested case class with upper level annotation!
+### Nested case class with upper level annotation
 
 It also works with nested case classes:
 
@@ -131,6 +131,21 @@ println(wrapper)
 
 will print
 > Wrapper(id-1,***)
+
+### Value case classes
+
+`@redacted` plays nicely with value case classes too, i.e.
+
+```scala 3
+case class Password(@redacted value: String) extends AnyVal
+val p = Password("somepassword")
+println(p)
+```
+will print on console
+
+```scala 3
+Password(***)
+```
 
 ### Note on curried case classes
 
@@ -182,8 +197,7 @@ implementation by selectively returning either the `***` string, or the value of
 
 ```scala 3
 def toString(): String =
-  "<class name>(" + this.< field not redacted > + "," + "***" +
-...+")"
+  "<class name>(" + this.< field not redacted > + "," + "***" +...+")"
 ```
 
 ## Improvements

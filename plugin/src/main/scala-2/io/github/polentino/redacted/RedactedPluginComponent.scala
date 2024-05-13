@@ -91,6 +91,9 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
       classDef.impl.body.collectFirst {
         case d: DefDef if d.name.decode == GenBCode.INSTANCE_CONSTRUCTOR_NAME =>
           d.vparamss.headOption.fold(List.empty[ValDef])(v => v.filter(_.mods.hasAnnotationNamed(redactedTypeName)))
+      } match {
+        case Some(fields) if fields.nonEmpty => Some(fields)
+        case _ => None
       }
 
     /** Utility method to generate a new `toString` definition based on the parameters marked with `@redacted`.
