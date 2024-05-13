@@ -28,6 +28,25 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
     }
   }
 
+  it should "not change the default behavior, if no annotation is used" in {
+    case class NormalCaseClass(name: String, age: Int)
+
+    forAll { (name: String, age: Int) =>
+      val expected = s"NormalCaseClass($name,$age)"
+      val testing = NormalCaseClass(name, age)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp {
+        assert(testing.name == name && testing.age == age)
+      }
+      cp.reportAll()
+    }
+  }
+
   it should "work with a redacted case class with many members" in {
     case class ManyMembers(field1: String, @redacted field2: String, @redacted field3: String, field4: String)
 
