@@ -155,6 +155,21 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
     }
   }
 
+  it should "work with value case classes" in {
+    forAll { (pwd: String) =>
+      val expected = s"Password(***)"
+      val testing = Password(pwd)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp { assert(testing.value == pwd) }
+      cp.reportAll()
+    }
+  }
+
   it must "not change the behavior of `hashCode`" in {
     final case class TestClass(uuid: UUID, name: String, age: Int)
     object RedactedTestClass {
