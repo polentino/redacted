@@ -6,15 +6,16 @@ val scalaCheckVersion = "3.2.18.0"
 
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
-//  "2.12.19",
-//  "2.13.13"
-  //,
-//  "3.1.3",
+  "2.12.19",
+  "2.13.13",
+//  "3.1.3", // maybe drop support on these? we're already at 3.6
 //  "3.2.2",
-//  "3.3.0",
+  "3.3.0",
   "3.3.1",
   "3.3.3",
-  "3.4.1"
+  "3.4.3",
+  "3.5.2",
+  "3.6.3"
 )
 
 inThisBuild(
