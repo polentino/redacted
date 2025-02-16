@@ -1,134 +1,126 @@
 package io.github.polentino.redacted
 
-import scala.tools.nsc.backend.jvm.GenBCode
 import scala.tools.nsc.plugins.PluginComponent
 import scala.tools.nsc.transform.Transform
-import scala.util.{Failure, Success}
+import scala.util.Success
 import scala.tools.nsc.Global
 
 class RedactedPluginComponent(val global: Global) extends PluginComponent with Transform {
 
   override val phaseName: String = "patch-tostring-component"
 
-  override val runsAfter: List[String] = List("typer") // todo typer or not?
-
-//  override val runsRightAfter: Option[String] = Some("parser")
+  override val runsAfter: List[String] = List("parser")
 
   import global._
 
-  override protected def newTransformer(unit: CompilationUnit): Transformer = ToStringMaskerTransformer
+  override protected def newTransformer(unit: CompilationUnit): Transformer = RedactedToStringTransformer
 
-  private object ToStringMaskerTransformer extends Transformer {
+  private object RedactedToStringTransformer extends Transformer {
     private val REDACTED_CLASS: String = "io.github.polentino.redacted.redacted"
-    private val TO_STRING_NAME = "toString"
-    private val redactedTypeName = TypeName("redacted")
-    private val stringType = global.definitions.StringTpe
+    private val toStringTermName = TermName("toString")
 
     override def transform(tree: Tree): Tree = {
-      val t = super.transform(tree)
-      validate2(t) match {
-        case Some(validatedDefDef) =>
-          val mods = validatedDefDef.mods
-          val name = validatedDefDef.name
-          val tparams = validatedDefDef.tparams
-          val vparamss = validatedDefDef.vparamss
-          val rhs = validatedDefDef.rhs
-          val tpt = validatedDefDef.tpt
+      val transformedTree = super.transform(tree)
+      validate(transformedTree) match {
+        case Some(toStringDef) =>
+          val maybePatchedToStringDef = for {
+            newToStringBody <- createToStringBody(toStringDef)
+              .withLog(s"couldn't create proper `toString()` body")
 
-          val res = for {
-            body <- createToStringBody(validatedDefDef)
-          } yield treeCopy.DefDef(validatedDefDef, mods, name, tparams, vparamss, tpt, body)
+            patchedToStringDef <- patchToString(toStringDef, newToStringBody)
+              .withLog(s"couldn't patch `toString` body into existing method definition")
+          } yield patchedToStringDef
 
+          maybePatchedToStringDef match {
+            case Some(neeDefDef) => neeDefDef
+            case None =>
+              reporter.warning(
+                tree.pos,
+                s"""
+                   |Dang, couldn't patch properly ${tree.symbol.name} :(
+                   |If you believe this is an error: please report the issue, along with a minimum reproducible example,
+                   |at the following link: https://github.com/polentino/redacted/issues/new .
+                   |
+                   |Thank you 🙏
+                   |""".stripMargin
+              )
+              transformedTree
+          }
 
-          res.get
-        case None => t
+        case None => transformedTree
       }
     }
 
-    private def validate2(tree: Tree): Option[DefDef] = for {
-      defDef <- isToString(tree)
-      _ <- ownerRedactedFields(tree.symbol.owner)
-    } yield defDef
+    /** Ensures that the `Tree` passed as parameter is owned by a case class, its actual type is a `DefDef` of the
+      * method `toString`, and that the case class has actually at least one ctor member that is redacted.
+      * @param tree
+      *   the tree to be validated
+      * @return
+      *   the validated `DefDef` of a `toString` method definition which is contained in a case class that has at least
+      *   one redacted ctor member wrapped in an Option
+      */
+    private def validate(tree: Tree): Option[DefDef] = for {
+      defDefInCaseClass <- extractMethodDefinition(tree)
+      toStringDefDef <- isToString(defDefInCaseClass)
+      _ <- getRedactedFields(tree.symbol.owner)
+    } yield toStringDefDef
 
-    private def isToString(tree: Tree) = tree match {
-      case d:DefDef if d.name == TermName("toString") && d.symbol.owner.isCase => Some(d)
-      case _ => None
+    /** Ensures that the current Tree is actually a method definition, and its owner is a case class
+      * @param tree
+      *   the tree to be validated
+      * @return
+      *   the `DefDef` derived from the current tree, if it actually is of type `DefDef` and if the owner is a case
+      *   class wrapped in an Option
+      */
+    private def extractMethodDefinition(tree: Tree): Option[DefDef] = tree match {
+      case d: DefDef if d.symbol.owner.isCaseClass => Some(d)
+      case _                                       => None
     }
 
-    private def ownerRedactedFields(symbol: Symbol): Option[List[Symbol]] = {
+    /** Ensures that the current `DefDef` refers to the definition of a `toString` method
+      * @param defDef
+      *   the `DefDef` to be checked the tree from
+      * @return
+      */
+    private def isToString(defDef: DefDef): Option[DefDef] =
+      if (defDef.name == toStringTermName) Some(defDef) else None
+
+    /** Given a `Symbol`, extracts all ctor members annotated with `@redacted`
+      * @param symbol
+      *   the symbol to be inspected
+      * @return
+      *   A non-empty list of soon-to-be-redacted symbols, wrapped in an Option
+      */
+    private def getRedactedFields(symbol: Symbol): Option[List[Symbol]] =
       symbol
-        .primaryConstructor.paramss.flatten
+        .primaryConstructor
+        .paramss
+        .flatten
         .filter(_.annotations.exists(_.symbol.fullName == REDACTED_CLASS)) match {
-        case Nil => None
+        case Nil            => None
         case redactedFields => Some(redactedFields)
       }
-    }
 
-    /** Utility method that ensures the current tree being inspected is a case class with at least one parameter
-     * annotated with `@redacted`.
-     * @param tree
-     *   the tree to be checked
-     * @return
-     *   an option containing the validated `ClassDef`, or `None`
-     */
-    private def validate2(template: Template): Option[Template] = for {
-      validatedTemplate <- validateTemplate(template)
-      _ <- getRedactedFields2(template)
-    } yield validatedTemplate
-
-    private def validateTemplate(template: Template): Option[Template] = Option(template.tpe) match {
-      case Some(tpe) if tpe.typeSymbol.isCaseClass => Some(template)
-      case _ => None
-    }
-
-    private def getRedactedFields2(template: Template): Option[List[Symbol]] = {
-      template.tpe.typeSymbol
-        .primaryConstructor.paramss.flatten
-        .filter(_.annotations.exists(_.symbol.fullName == REDACTED_CLASS)) match {
-        case Nil => None
-        case redactedFields => Some(redactedFields)
-      }
-    }
-
-    private def patchToString(template: Template, newToStringBody: Tree): scala.util.Try[Template] = scala.util.Try {
-      val newBody = template.body.map {
-        case d: DefDef if d.name.decode == TO_STRING_NAME =>
-          treeCopy.DefDef(
-            d,
-            d.mods,
-            d.name,
-            Nil,
-            Nil,
-            d.tpt,
-            newToStringBody)
-        case value => value
-      }
-
-      treeCopy.Template(
-        template,
-        template.parents,
-        template.self,
-        newBody)
-    }
-
+    /** Builds the new body of the `toString` method
+      * @param defDef
+      *   the initial `toString` method definition
+      * @return
+      *   the new body of the `toString` method, that will hide redacted fields
+      */
     private def createToStringBody(defDef: DefDef): scala.util.Try[Tree] = scala.util.Try {
-      val className = defDef.symbol.owner.unexpandedName.toString // todo replace originalName
-      val redactedFields = ownerRedactedFields(defDef.symbol.owner).getOrElse(Nil)
+      val className = defDef.symbol.owner.unexpandedName.toString
+      val redactedFields = getRedactedFields(defDef.symbol.owner).getOrElse(Nil)
       val memberNames = defDef.symbol.owner.primaryConstructor.paramss.headOption.getOrElse(Nil)
-      val classPrefix = (className + "(").toConstantLiteral.setType(stringType)
-      val classSuffix = ")".toConstantLiteral.setType(stringType)
-      val commaSymbol = ",".toConstantLiteral.setType(stringType)
-      val asterisksSymbol = "***".toConstantLiteral.setType(stringType)
+      val classPrefix = (className + "(").toConstantLiteral
+      val classSuffix = ")".toConstantLiteral
+      val commaSymbol = ",".toConstantLiteral
+      val asterisksSymbol = "***".toConstantLiteral
       val concatOperator = TermName("$plus")
       val thisRef: Tree = global.typer.typed(This(defDef.symbol.owner))
 
-
-      reporter.echo(s"REDACTED FIELDS: ${redactedFields.map(_.nameString)}")
-      reporter.echo(s"ALL FIELDS: ${memberNames.map(_.nameString)}")
-
       val fragments: List[Tree] = memberNames.map(m =>
         if (redactedFields.contains(m)) asterisksSymbol
-        else global.typer.typed(Select(thisRef, m.name))) //Apply(Select(thisRef, m.name), Nil))
+        else global.typer.typed(Select(thisRef, m.name)))
 
       def buildToStringTree(fragments: List[Tree]): Tree = {
 
@@ -144,121 +136,28 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
         global.typer.typed(Apply(Select(res, concatOperator), List(classSuffix)))
       }
 
-      buildToStringTree(fragments).setType(stringType)
-    }
-
-    private def getAllFields2(template: Template): List[Symbol] =
-      template.tpe.typeSymbol.primaryConstructor.paramss.flatten
-
-    /** Utility method that ensures the current tree being inspected is a case class with at least one parameter
-      * annotated with `@redacted`.
-      * @param tree
-      *   the tree to be checked
-      * @return
-      *   an option containing the validated `ClassDef`, or `None`
-      */
-    private def validate(tree: Tree): Option[global.ClassDef] = for {
-      caseClassType <- validateTypeDef(tree)
-      _ <- getRedactedFields(caseClassType)
-    } yield caseClassType
-
-    /** Utility method that checks whether the current tree being inspected corresponds to a case class.
-      * @param tree
-      *   the tree to be checked
-      * @return
-      *   an option containing the validated `ClassDef`, or `None`
-      */
-    private def validateTypeDef(tree: Tree): Option[ClassDef] = tree match {
-      case classDef: ClassDef if classDef.mods.isCase => Some(classDef)
-      case _                                          => None
-    }
-
-    /** Utility method that returns all ctor fields annotated with `@redacted`
-      * @param classDef
-      *   the ClassDef to be checked
-      * @return
-      *   an Option with the list of all params marked with `@redacted`, or `None` otherwise
-      */
-    private def getRedactedFields(classDef: ClassDef): Option[List[ValDef]] =
-      classDef.impl.body.collectFirst {
-        case d: DefDef if d.name.decode == GenBCode.INSTANCE_CONSTRUCTOR_NAME =>
-          d.vparamss.headOption.fold(List.empty[ValDef])(v => v.filter(_.mods.hasAnnotationNamed(redactedTypeName)))
-      } match {
-        case Some(fields) if fields.nonEmpty => Some(fields)
-        case _ => None
-      }
-
-    /** Utility method to generate a new `toString` definition based on the parameters marked with `@redacted`.
-      * @param classDef
-      *   the ClassDef for which we need a dedicated `toString` method
-      * @return
-      *   the body of the new `toString` method
-      */
-    private def createToStringBody(classDef: ClassDef): scala.util.Try[Tree] = scala.util.Try {
-      val className = classDef.name.decode
-      val memberNames = getAllFields(classDef)
-      val classPrefix = (className + "(").toConstantLiteral
-      val classSuffix = ")".toConstantLiteral
-      val commaSymbol = ",".toConstantLiteral
-      val asterisksSymbol = "***".toConstantLiteral
-      val concatOperator = TermName("$plus")
-
-      val fragments: List[Tree] = memberNames.map(m =>
-        if (m.mods.hasAnnotationNamed(redactedTypeName)) asterisksSymbol
-        else Apply(Select(Ident(m.name), TO_STRING_NAME), Nil))
-
-      def buildToStringTree(fragments: List[Tree]): Tree = {
-
-        def concatAll(l: List[Tree]): List[Tree] = l match {
-          case Nil          => Nil
-          case head :: Nil  => List(head)
-          case head :: tail => List(head, commaSymbol) ++ concatAll(tail)
-        }
-
-        val res = concatAll(fragments).fold(classPrefix) { case (accumulator, fragment) =>
-          Apply(Select(accumulator, concatOperator), List(fragment))
-        }
-        Apply(Select(res, concatOperator), List(classSuffix))
-      }
-
       buildToStringTree(fragments)
     }
 
-    /** Returns all the fields in a case class ctor.
-      * @param classDef
-      *   the `ClassDef` for which we want to get all if ctor field
+    /** Utility function to patch the existing `DefDef` with the new body implementation
+      *
+      * @param defDef
+      *   the `DefDef` to be patched
+      * @param newToStringBody
+      *   the new implementation that needs to override the old one
       * @return
-      *   a list of all the `ValDef`
+      *   the patched `toString` method definition
       */
-    private def getAllFields(classDef: ClassDef): List[ValDef] =
-      classDef.impl.body.collectFirst {
-        case d: DefDef if d.name.decode == GenBCode.INSTANCE_CONSTRUCTOR_NAME => d.vparamss.headOption.getOrElse(Nil)
-      }.getOrElse(Nil)
-
-    /** Build a new `toString` method definition containing the body passed as parameter.
-      * @param body
-      *   the body of the newly created `toString` method
-      * @return
-      *   the whole `toString` method definition
-      */
-    private def buildToStringMethod(body: Tree): scala.util.Try[DefDef] = scala.util.Try {
-      DefDef(Modifiers(Flag.OVERRIDE), TermName(TO_STRING_NAME), Nil, Nil, TypeTree(), body)
+    private def patchToString(defDef: DefDef, newToStringBody: Tree): scala.util.Try[DefDef] = scala.util.Try {
+      treeCopy.DefDef(
+        defDef,
+        defDef.mods,
+        defDef.name,
+        defDef.tparams,
+        defDef.vparamss,
+        defDef.tpt,
+        newToStringBody)
     }
-
-    /** Utility method that adds a new method definition to an existing `ClassDef` body.
-      * @param classDef
-      *   the class that needs to be patched
-      * @param newToStringMethod
-      *   the new method that will be included in the `ClassDef` passed as first parameter
-      * @return
-      *   the patched `ClassDef`
-      */
-    private def patchCaseClass(classDef: ClassDef, newToStringMethod: Tree): scala.util.Try[ClassDef] =
-      scala.util.Try {
-        val newBody = classDef.impl.body :+ newToStringMethod
-        val newImpl = classDef.impl.copy(body = newBody)
-        classDef.copy(impl = newImpl)
-      }
 
     // utility extension classes
 
@@ -266,9 +165,9 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
       def toConstantLiteral: Literal = Literal(Constant(s))
     }
 
-    private implicit class TryOps[Out](opt: scala.util.Try[Out]) {
+    private implicit class TryOps[Out](`try`: scala.util.Try[Out]) {
 
-      def withLog(message: String): Option[Out] = opt match {
+      def withLog(message: String): Option[Out] = `try` match {
         case Success(value) => Some(value)
         case _              => reporter.echo(message); None
       }

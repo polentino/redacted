@@ -4,11 +4,11 @@ import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.ast.untpd.Modifiers
 import dotty.tools.dotc.ast.{tpd, *}
+import dotty.tools.dotc.core.*
 import dotty.tools.dotc.core.Constants.Constant
 import dotty.tools.dotc.core.Contexts.*
 import dotty.tools.dotc.core.Names.TermName
 import dotty.tools.dotc.core.Symbols.*
-import dotty.tools.dotc.core.*
 import dotty.tools.dotc.util.Spans.Span
 
 import scala.util.{Failure, Success, Try}
