@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 jobs:
-  main:
+  run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
     steps:

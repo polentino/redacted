@@ -1,0 +1,113 @@
+branches:
+  - name: "main"
+  - name: v+([0-9])?(.{+([0-9]),x})
+    range: ${name.replace(/^v/g, '')}
+
+ci: true
+tagFormat: 'v${version}'
+preset: 'conventionalcommits'
+
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - "@semantic-release/changelog"
+  - "@semantic-release/exec"
+  - "@semantic-release/git"
+  - "@semantic-release/github"
+
+verifyConditions:
+  - "@semantic-release/changelog"
+  - "@semantic-release/git"
+  - "@semantic-release/github"
+
+analyzeCommits:
+  - path: "@semantic-release/commit-analyzer"
+    releaseRules:
+      - breaking: true
+        release: major
+      - scope: no-release
+        release: false
+      - type: build
+        release: false
+      - type: chore
+        release: false
+      - type: ci
+        release: false
+      - type: docs
+        release: false
+      - type: feature
+        release: minor
+      - type: hotfix
+        release: patch
+      - type: fix
+        release: patch
+      - type: perf
+        release: patch
+      - type: refactor
+        release: patch
+      - type: revert
+        release: patch
+      - type: style
+        release: false
+      - type: test
+        release: false
+
+# Responsible for generating the content of the release notes.
+generateNotes:
+  - path: "@semantic-release/release-notes-generator"
+    linkCompare: true
+    linkReferences: true
+    presetConfig:
+      types:
+        - type: build
+          section: 🏗️ Build
+          hidden: false
+        - type: ci
+          section: 🤖 CI/CD
+          hidden: false
+        - type: docs
+          section: 📖 Docs
+          hidden: false
+        - type: feature
+          section: ✨ Features
+          hidden: false
+        - type: hotfix
+          section: 🩹 Fixes
+          hidden: false
+        - type: fix
+          section: 🩹 Fixes
+          hidden: false
+        - type: perf
+          section: ⚡️ Performance
+          hidden: false
+        - type: refactor
+          section: 🔁 Refactorings
+          hidden: false
+        - type: revert
+          section: ⏪ Reverts
+          hidden: false
+        - type: style
+          section: 🎨 Style
+          hidden: false
+        - type: test
+          section: ✅ Tests
+          hidden: false
+
+# Responsible for preparing the release.
+prepare:
+  - path: "@semantic-release/changelog"
+    changelogFile: "CHANGELOG.md"
+  - path: "@semantic-release/exec"
+    shell: "/bin/bash"
+    prepareCmd: >-
+      if [[ -f "version.sbt" ]]; then
+        echo 'ThisBuild / version := "${nextRelease.version}"' > version.sbt
+      fi;
+  - path: "@semantic-release/git"
+    message: "chore(release): v${lastRelease.version || '0.0.0'} → v${nextRelease.version}"
+    assets:
+      - CHANGELOG.md
+      - build.sbt
+      - version.sbt
+publish:
+  - path: "@semantic-release/github"
