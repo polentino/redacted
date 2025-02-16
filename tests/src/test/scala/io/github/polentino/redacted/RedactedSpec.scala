@@ -170,6 +170,56 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
     }
   }
 
+  it should "work when using its FQDN" in {
+    final case class ClassWithFQDNAnnot(uuid: UUID, @io.github.polentino.redacted.redacted name: String, age: Int)
+    forAll { (uuid: UUID, name: String, age: Int) =>
+      val expected = s"ClassWithFQDNAnnot(${uuid.toString},***,$age)"
+      val testing = ClassWithFQDNAnnot(uuid, name, age)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp { assert(testing.name == name) }
+      cp.reportAll()
+    }
+  }
+
+  it should "work when using an alias" in {
+    import io.github.polentino.redacted.{redacted => testAnnotation}
+    final case class ClassWithAlias(uuid: UUID, @testAnnotation name: String, age: Int)
+    forAll { (uuid: UUID, name: String, age: Int) =>
+      val expected = s"ClassWithAlias(${uuid.toString},***,$age)"
+      val testing = ClassWithAlias(uuid, name, age)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp { assert(testing.name == name) }
+      cp.reportAll()
+    }
+  }
+
+  it should "not work when using different `redacted` annotations" in {
+    import some.fakepkg.redacted
+    final case class ClassWithAlias(uuid: UUID, @redacted name: String, age: Int)
+    forAll { (uuid: UUID, name: String, age: Int) =>
+      val expected = s"ClassWithAlias(${uuid.toString},$name,$age)"
+      val testing = ClassWithAlias(uuid, name, age)
+      val implicitToString = s"$testing"
+      val explicitToString = testing.toString
+
+      val cp = new Checkpoint
+      cp { assert(implicitToString == expected) }
+      cp { assert(explicitToString == expected) }
+      cp { assert(testing.name == name) }
+      cp.reportAll()
+    }
+  }
+
   it must "not change the behavior of `hashCode`" in {
     final case class TestClass(uuid: UUID, name: String, age: Int)
     object RedactedTestClass {

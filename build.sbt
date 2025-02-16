@@ -1,6 +1,7 @@
 ThisBuild / scalaVersion := "3.1.3"
 
 val organizeImportVersion = "0.6.0"
+// interesting; bumping scalatest / scalacheck, makes 3.1.x and 3.2.x compilation to fail
 val scalaTestVersion = "3.2.17"
 val scalaCheckVersion = "3.2.17.0"
 
@@ -13,7 +14,9 @@ val supportedScalaVersions = List(
   "3.3.0",
   "3.3.1",
   "3.3.3",
-  "3.4.1"
+  "3.4.3",
+  "3.5.2",
+  "3.6.3"
 )
 
 inThisBuild(
