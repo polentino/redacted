@@ -35,7 +35,7 @@ jobs:
           npm install semantic-release -D
           npm install @semantic-release/commit-analyzer -D
       - name: Run Semantic Commit Analyzer
-        run: npx semantic-release/commit-analyzer
+        run: npx commit-analyzer
 
   run-tests:
     name: Run Tests
