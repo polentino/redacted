@@ -17,6 +17,7 @@ jobs:
   semantic-release:
     name: Semantic Release
     runs-on: ubuntu-latest
+    needs: run-tests
     permissions:
       contents: write
       issues: write
