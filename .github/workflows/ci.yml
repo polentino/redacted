@@ -19,6 +19,8 @@ jobs:
   semantic-commit-linter:
     name: Validate PR title
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,7 +35,7 @@ jobs:
           npm install semantic-release -D
           npm install @semantic-release/commit-analyzer -D
       - name: Run Semantic Commit Analyzer
-        run: npx commit-analyzer
+        run: npx semantic-release/commit-analyzer
 
   run-tests:
     name: Run Tests
