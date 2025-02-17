@@ -33,8 +33,13 @@ jobs:
       - name: Install semantic-release
         run: |
           npm install semantic-release -D
-          npm install @semantic-release/changelog -D
-          npm install @semantic-release/commit-analyzer -D
+          npm install @semantic-release/commit-analyzer -D 
+          npm install @semantic-release/release-notes-generator -D
+          npm install @semantic-release/changelog 
+          npm install @semantic-release/exec -D
+          npm install @semantic-release/git -D
+          npm install @semantic-release/github -D
+          npm install conventional-changelog-conventionalcommits -D
       - name: Run Semantic Commit Analyzer
         run: npx semantic-release --dry-run
 
