@@ -7,13 +7,15 @@ val scalaCheckVersion = "3.2.17.0"
 
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
-  "2.12.19",
-  "2.13.13",
+  "2.12.20",
+  "2.13.16",
   "3.1.3",
   "3.2.2",
   "3.3.0",
   "3.3.1",
   "3.3.3",
+  "3.3.4",
+  "3.3.5",
   "3.4.3",
   "3.5.2",
   "3.6.3"
@@ -49,7 +51,6 @@ lazy val root = (project in file("."))
   .aggregate(redactedLibrary, redactedCompilerPlugin, redactedTests)
 
 val scalafixSettings = Seq(
-  scalafixDependencies += "com.liancheng" %% "organize-imports" % organizeImportVersion,
   semanticdbEnabled := true,
   semanticdbVersion := scalafixSemanticdb.revision
 )
