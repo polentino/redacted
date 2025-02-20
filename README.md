@@ -1,4 +1,4 @@
-![Actions Status](https://github.com/polentino/redacted/actions/workflows/ci.yml/badge.svgg)
+![Actions Status](https://github.com/polentino/redacted/actions/workflows/ci.yml/badge.svg)
 ![GitHub Tag](https://img.shields.io/github/v/tag/polentino/redacted?sort=semver&label=Latest%20Tag&color=limegreen)
 ![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.polentino/redacted_3.1.3?server=https%3A%2F%2Fs01.oss.sonatype.org&label=Sonatype%20-%20redacted&color=blue)
 ![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.polentino/redacted-plugin_3.1.3?server=https%3A%2F%2Fs01.oss.sonatype.org&label=Sonatype%20-%20redacted%20plugin&color=blue)
