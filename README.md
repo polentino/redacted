@@ -1,4 +1,4 @@
-![Actions Status](https://github.com/polentino/redacted/workflows/Scala%20CI/badge.svg)
+![Actions Status](https://github.com/polentino/redacted/actions/workflows/ci.yml/badge.svg)
 ![GitHub Tag](https://img.shields.io/github/v/tag/polentino/redacted?sort=semver&label=Latest%20Tag&color=limegreen)
 ![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.polentino/redacted_3.1.3?server=https%3A%2F%2Fs01.oss.sonatype.org&label=Sonatype%20-%20redacted&color=blue)
 ![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.polentino/redacted-plugin_3.1.3?server=https%3A%2F%2Fs01.oss.sonatype.org&label=Sonatype%20-%20redacted%20plugin&color=blue)
@@ -50,8 +50,8 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 in your `build.sbt` file, add the following lines
 
 ```scala 3
-val redactedVersion = // use latest version of the library
-resolvers += DefaultMavenRepository
+val redactedVersion = "x.y.z" // use latest version of the library
+// resolvers += DefaultMavenRepository
 
 libraryDependencies ++= Seq(
   "io.github.polentino" %% "redacted" % redactedVersion cross CrossVersion.full,
@@ -138,9 +138,11 @@ will print
 
 ```scala 3
 case class Password(@redacted value: String) extends AnyVal
+
 val p = Password("somepassword")
 println(p)
 ```
+
 will print on console
 
 ```scala 3
@@ -166,7 +168,7 @@ println(c)
 will display
 
 ```scala 3
-Curried(0,Berfu)
+Curried(0, Berfu)
 ```
 
 Therefore, the same behavior is being kept in the customized `toString` implementation.
@@ -189,15 +191,14 @@ final case class User(id: UUID, @redacted name: String) {
 
 The way it's done is the following:
 
-[PatchToString](plugin/src/main/scala/io/github/polentino/redacted/phases/PatchToString.scala) phase will inspect every
-class type definition and check whether the class being analysed is a `case class`, and if it has at least one of its
-fields annotated with `@redacted` ; if that's the case, it will then proceed to rewrite the default `toString`
-implementation by selectively returning either the `***` string, or the value of the field, depending on the presence
-(or not) of `@redacted` like so:
+The compiler plugin will inspect each type definition and check whether the class being analysed is a `case class`, and
+if it has at least one of its fields annotated with `@redacted` ; if that's the case, it will then proceed to rewrite
+the default `toString` implementation by selectively returning either the `***` string, or the value of the field,
+depending on the presence (or not) of `@redacted`, resulting in an implementation that looks like so:
 
 ```scala 3
 def toString(): String =
-  "<class name>(" + this.< field not redacted > + "," + "***" +...+")"
+  "<class name>(" + this.< field not redacted > + "," + "***" + ... +")"
 ```
 
 ## Improvements
@@ -208,7 +209,7 @@ def toString(): String =
 ## Credits
 
 * Awesome pointers and ideas by Kit Langton (although it's about macros and not compiler plugins)
-  * [Compile-Time Time! — Data Transmogrification Macro From Scratch — Part 1](https://www.youtube.com/watch?v=h9hCm7GRbfE)
-  * [Compile-Time Time! — Data Transmogrification Macro From Scratch — Part 2](https://www.youtube.com/watch?v=w7pzqHXGnf8)
+    * [Compile-Time Time! — Data Transmogrification Macro From Scratch — Part 1](https://www.youtube.com/watch?v=h9hCm7GRbfE)
+    * [Compile-Time Time! — Data Transmogrification Macro From Scratch — Part 2](https://www.youtube.com/watch?v=w7pzqHXGnf8)
 * [Compiler Plugin Development in Scala 3 | Let's talk about Scala 3](https://www.youtube.com/watch?v=oqYd_Lwj2p0)
 * [act](https://github.com/nektos/act)
