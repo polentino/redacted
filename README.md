@@ -7,7 +7,7 @@
 
 > Prevents leaking sensitive fields defined inside `case class`.
 
-![Simple example of @redacted usage](images/redacted-example.png "Sample usage")
+![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
 In Scala, `case class`(es) are omnipresent: they are the building blocks for complex business domain models, due to how
 easily they can be defined and instantiated; on top of that, the Scala compiler provides a convenient `toString` method
