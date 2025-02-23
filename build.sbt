@@ -5,6 +5,9 @@ val organizeImportVersion = "0.6.0"
 val scalaTestVersion = "3.2.19"
 val scalaCheckVersion = "3.2.17.0"
 
+// versions overrides needed to address vulnerabilities
+val protobufJavaVersion = "3.25.5"
+
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
   "2.12.20",
@@ -55,11 +58,17 @@ val scalafixSettings = Seq(
   semanticdbVersion := scalafixSemanticdb.revision
 )
 
+val dependenciesOverride = Seq(
+  "com.google.protobuf" % "protobuf-java" % protobufJavaVersion
+//  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion
+)
+
 val crossCompileSettings = scalafixSettings ++ Seq(
   Test / skip := true,
   crossTarget := target.value / s"scala-${scalaVersion.value}", // workaround for https://github.com/sbt/sbt/issues/5097
   crossVersion := CrossVersion.full,
-  crossScalaVersions := supportedScalaVersions
+  crossScalaVersions := supportedScalaVersions,
+  dependencyOverrides ++= dependenciesOverride
 )
 
 lazy val redactedLibrary = (project in file("library"))
