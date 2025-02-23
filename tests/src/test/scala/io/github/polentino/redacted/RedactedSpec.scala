@@ -40,9 +40,7 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
       val cp = new Checkpoint
       cp { assert(implicitToString == expected) }
       cp { assert(explicitToString == expected) }
-      cp {
-        assert(testing.name == name && testing.age == age)
-      }
+      cp { assert(testing.name == name && testing.age == age) }
       cp.reportAll()
     }
   }
@@ -97,7 +95,7 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
       def toUpper(@redacted name: String): String = name.toUpperCase()
     }
 
-    forAll { (name: String, age: Int) =>
+    forAll { (name: String, age: Int, nameParam: String) =>
       val expected = s"TestWrongAnnotationPlacement($name,$age)"
       val testing = TestWrongAnnotationPlacement(name, age)
       val implicitToString = s"$testing"
@@ -106,9 +104,8 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
       val cp = new Checkpoint
       cp { assert(implicitToString == expected) }
       cp { assert(explicitToString == expected) }
-      cp {
-        assert(testing.name == name && testing.age == age)
-      }
+      cp { assert(testing.name == name && testing.age == age) }
+      cp { assert(testing.toUpper(nameParam) == nameParam.toUpperCase()) }
       cp.reportAll()
     }
   }
@@ -125,9 +122,7 @@ class RedactedSpec extends AnyFlatSpec with ScalaCheckPropertyChecks {
       val cp = new Checkpoint
       cp { assert(implicitToString == expected) }
       cp { assert(explicitToString == expected) }
-      cp {
-        assert(testing.age == age && testing.name == name)
-      }
+      cp { assert(testing.age == age && testing.name == name) }
       cp.reportAll()
     }
   }

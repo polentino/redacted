@@ -13,6 +13,8 @@ import scala.annotation.StaticAnnotation
   *
   * // log to console
   * logger.info(user)   //   User(5f3ab309-2784-4b78-a798-6cf44f35edfd, ***, ***)
+  * // but accessing the single field will return the real value
+  * logger.info(s"the name is ${user.name}") // the name is Berfu
   * }}}
   */
 class redacted extends StaticAnnotation
