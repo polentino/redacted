@@ -60,7 +60,6 @@ val scalafixSettings = Seq(
 
 val dependenciesOverride = Seq(
   "com.google.protobuf" % "protobuf-java" % protobufJavaVersion
-//  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion
 )
 
 val crossCompileSettings = scalafixSettings ++ Seq(
