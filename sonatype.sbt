@@ -11,10 +11,9 @@ ThisBuild / publishTo := sonatypePublishToBundle.value
 ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
 ThisBuild / licenses := List("WTFPL" -> url("http://www.wtfpl.net/"))
 ThisBuild / homepage := Some(url("https://github.com/polentino/redacted"))
-ThisBuild / sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 ThisBuild / sonatypeProjectHosting := Some(GitHubHosting("polentino", "redacted", "polentino911@gmail.com"))
 ThisBuild / developers := List(
   Developer("polentino", "Diego Casella", "polentino911@gmail.com", url("https://linkedin.com/in/diegocasella"))
 )
 
-usePgpKeyHex("8326E86A8331A3C871E392795045B78015B14EE0")
+usePgpKeyHex("5A167E17FB1B86685ECFD29A2F7D08508EB255BF")
