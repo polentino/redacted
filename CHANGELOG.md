@@ -1,3 +1,26 @@
+## [0.6.2](https://github.com/polentino/redacted/compare/v0.6.1...v0.6.2) (2025-02-23)
+
+### 🤖 CI/CD
+
+* customize scala-steward commit message ([#27](https://github.com/polentino/redacted/issues/27)) ([c090fcb](https://github.com/polentino/redacted/commit/c090fcb225bb2425a6c95ea8a285a07df14e97a0))
+* update dependency graph submission ([#26](https://github.com/polentino/redacted/issues/26)) ([bfbe8b5](https://github.com/polentino/redacted/commit/bfbe8b5fcb072efa8a8fcd39d3be9f233096b545))
+
+### 📖 Docs
+
+* added demo gif ([a78d2cd](https://github.com/polentino/redacted/commit/a78d2cdd3bb8e922ad8519c493dca68947352ac7))
+* better demo gif ([cfc4a53](https://github.com/polentino/redacted/commit/cfc4a5337ef35fc4d271763a279682a7853a9104))
+* improved demo (with import alias too) ([b888547](https://github.com/polentino/redacted/commit/b88854733b534c4e0fea69420da5bf92d072b028))
+* typo-- :( ([7e46830](https://github.com/polentino/redacted/commit/7e4683068594d67314f92ec7b46f35b2dfb56143))
+* update badge link, improved docs ([0f7e28b](https://github.com/polentino/redacted/commit/0f7e28ba63829c2318ee5de5ee499ceb0083e1fb))
+
+### 🩹 Fixes
+
+* address vuln in protobuf-java ([#29](https://github.com/polentino/redacted/issues/29))  ([29ffaf1](https://github.com/polentino/redacted/commit/29ffaf1ce484e7afee9bf6f62453f5ca390255a2))
+
+### ✅ Tests
+
+* ensure call to `toUpper` yield expected result & fmt ([427b00e](https://github.com/polentino/redacted/commit/427b00e28f16472e91c42d32abd43dccb2d3f3b3))
+
 ## [0.6.1](https://github.com/polentino/redacted/compare/v0.6.0...v0.6.1) (2025-02-17)
 
 ### 🤖 CI/CD
