@@ -6,7 +6,7 @@
 
 # Redacted
 
-> Prevents leaking sensitive fields defined inside `case class`.
+>  Prevents leaking sensitive fields defined inside `case class`.
 
 ![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
@@ -48,7 +48,8 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 
 ## Usage
 
-in your `build.sbt` file, add the following lines
+No matter of the scala version you use (redacted is available for Scala `2.12.x`, `2.13.x` and all `3.x` LTS versions),
+all you have to do is open `build.sbt` file, add the following lines
 
 ```scala 3
 val redactedVersion = "x.y.z" // use latest version of the library
