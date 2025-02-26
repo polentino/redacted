@@ -5,23 +5,25 @@ import scala.util.{Success, Try}
 trait RedactedAPI {
   type Tree
   type ValidatedTree
-  type Pos = reporter.Pos
+  type Pos <: reporter.type#Pos
 
   protected val reporter: ReporterApi
 
   // Scala 2: Tree => DefDef / Scala 3: tpd.TypeDef => tpd.TypeDef
-  def validate(tree: Tree): Option[ValidatedTree]
+  protected def validate(tree: Tree): Option[ValidatedTree]
 
   // Scala 2: DefDef => Tree / Scala 3: tpd.TypeDef => tpd.Tree
-  def createToStringBody(defDef: ValidatedTree): Try[Tree]
+  protected def createToStringBody(defDef: ValidatedTree): Try[Tree]
 
   // Scala 2: DefDef => Tree / Scala 3: tpd.TypeDef => tpd.Tree
-  def patchToString(defDef: ValidatedTree, newToStringBody: Tree): Try[Tree]
+  protected def patchToString(defDef: ValidatedTree, newToStringBody: Tree): Try[Tree]
 
-  def getPos(tree: Tree): Pos
+  // utilities
+  protected def getPos(tree: Tree): Pos
 
-  def getName(tree: Tree): String
+  protected def getName(tree: Tree): String
 
+  // main body
   final def process(tree: Tree): Tree = validate(tree) match {
     case Some(toStringDef) =>
       val maybePatchedToStringDef = for {
