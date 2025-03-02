@@ -12,15 +12,20 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
   override val runsAfter: List[String] = List("parser")
 
   import global._
+  val runtimeApi: ScalaSpecificRuntime[global.type] = ScalaSpecificRuntime(global)
+  val redactedApi: RedactedApi[runtimeApi.type] = RedactedApi(runtimeApi)
 
-  override protected def newTransformer(unit: CompilationUnit): Transformer = RedactedToStringTransformer
+  override protected def newTransformer(unit: CompilationUnit): Transformer = new RedactedToStringTransformer()
 
-  private object RedactedToStringTransformer extends Transformer {
+  private class RedactedToStringTransformer() extends Transformer {
     private val REDACTED_CLASS: String = "io.github.polentino.redacted.redacted"
     private val toStringTermName = TermName("toString")
 
     override def transform(tree: Tree): Tree = {
       val transformedTree = super.transform(tree)
+
+      redactedApi.process(transformedTree) // it compiles !
+
       validate(transformedTree) match {
         case Some(toStringDef) =>
           val maybePatchedToStringDef = for {

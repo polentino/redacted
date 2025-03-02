@@ -1,8 +1,8 @@
 package io.github.polentino.redacted
 
-trait ReporterApi {
-  type Pos
+trait ReporterApi[Api <: RuntimeApi] {
+  protected val runtime: Api
 
   def echo(message: String): Unit
-  def warning(pos: Pos, message: String): Unit
+  def warning(pos: runtime.Position, message: String): Unit
 }
