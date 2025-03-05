@@ -5,14 +5,13 @@ trait RuntimeApi {
   type MethodDef
   type Symbol
   type Position
+  protected val REDACTED_CLASS: String = "io.github.polentino.redacted.redacted"
 
   final def process(tree: Tree): Tree = validate(tree) match {
     case Some(_) =>
-      println("TREE IS VALID")
+      println(s"${getOwnerName(tree)} can be redacted") // todo use proper logging
       tree
-    case None =>
-      println("TREE IS NOT VALID")
-      tree
+    case None => tree
   }
 
   private final def validate(tree: Tree): Option[MethodDef] = for {
@@ -21,7 +20,10 @@ trait RuntimeApi {
     _ <- getRedactedFields(tree)
   } yield toStringDefDef
 
+//  private def createToStringBody(defDef: MethodDef): scala.util.Try[Tree] = // todo implement this next :S
+
   protected def extractMethodDefinition(tree: Tree): Option[MethodDef]
   protected def isToString(defDef: MethodDef): Option[MethodDef]
-  protected def getRedactedFields(symbol: Tree): Option[List[Symbol]]
+  protected def getRedactedFields(tree: Tree): Option[List[Symbol]]
+  protected def getOwnerName(tree: Tree): String
 }

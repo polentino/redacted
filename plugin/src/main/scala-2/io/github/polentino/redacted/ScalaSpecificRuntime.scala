@@ -12,7 +12,6 @@ trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
   override type Position = theGlobal.Position
 
   // todo: move to RuntimeApi
-  private val REDACTED_CLASS: String = "io.github.polentino.redacted.redacted"
   private lazy val toStringTermName = theGlobal.TermName("toString")
 
   protected def extractMethodDefinition(tree: Tree): Option[MethodDef] = tree match {
@@ -32,6 +31,10 @@ trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
       case Nil            => None
       case redactedFields => Some(redactedFields)
     }
+
+  protected def getOwnerName(tree: Tree): String =
+    tree.symbol.owner.unexpandedName.toString
+
 }
 
 object ScalaSpecificRuntime {

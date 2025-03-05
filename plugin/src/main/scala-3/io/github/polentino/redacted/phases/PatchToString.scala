@@ -11,12 +11,21 @@ import scala.util.Try
 
 import io.github.polentino.redacted.helpers.AstOps.*
 import io.github.polentino.redacted.helpers.PluginOps.*
+import io.github.polentino.redacted.{RedactedApi, RuntimeApi}
 
 final case class PatchToString() extends PluginPhase {
 
   override val runsAfter: Set[String] = Set(Pickler.name)
 
   override def phaseName: String = PatchToString.name
+
+  override def transformDefDef(tree: tpd.DefDef)(using ctx: Context): tpd.Tree = {
+    // let's align with Scala 2 and try to transform the DefDef corresponding to `toString` definition
+    val runtimeApi: ScalaSpecificRuntime = ScalaSpecificRuntime.create
+    val redactedApi: RedactedApi[runtimeApi.type] = RedactedApi(runtimeApi)
+    redactedApi.process(tree)
+    super.transformDefDef(tree)
+  }
 
   override def transformTypeDef(tree: tpd.TypeDef)(using Context): tpd.Tree = validate(tree) match {
     case None => tree
