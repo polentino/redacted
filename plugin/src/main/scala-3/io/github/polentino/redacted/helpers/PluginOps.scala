@@ -137,7 +137,9 @@ object PluginOps {
         case head :: tail => List(head, commaSymbol) ++ concatAll(tail)
       }
 
-      val res = concatAll(fragments).fold(classPrefix) { case (l, r) => l.select(concatOperator).appliedTo(r) }
+      val res = concatAll(fragments).fold(classPrefix) { case (accumulator, fragment) =>
+        accumulator.select(concatOperator).appliedTo(fragment)
+      }
       res.select(concatOperator).appliedTo(classSuffix)
     }
 
