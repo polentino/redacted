@@ -1,25 +1,17 @@
 package io.github.polentino.redacted.phases
 
-import dotty.tools.dotc.ast.{Trees, tpd}
-import dotty.tools.dotc.core.Contexts.Context
-import dotty.tools.dotc.core.Names.*
-import dotty.tools.dotc.core.Names
-import dotty.tools.dotc.core.{Flags, Symbols, Constants}
-import dotty.tools.dotc.report
-import dotty.tools.dotc.util.SrcPos
-
-/////
 import dotty.tools.dotc.*
+import dotty.tools.dotc.ast.*
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.ast.untpd.Modifiers
-import dotty.tools.dotc.ast.{tpd, *}
 import dotty.tools.dotc.core.*
 import dotty.tools.dotc.core.Constants.Constant
 import dotty.tools.dotc.core.Contexts.*
-import dotty.tools.dotc.core.Names.TermName
+import dotty.tools.dotc.core.Names.*
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.util.Spans.Span
-///
+import dotty.tools.dotc.util.SrcPos
+
 import io.github.polentino.redacted.RuntimeApi
 
 trait ScalaSpecificRuntime extends RuntimeApi {
@@ -82,7 +74,7 @@ trait ScalaSpecificRuntime extends RuntimeApi {
     lhs.select(concatOperator).appliedTo(rhs)
   }
 
-  protected def patchToString(defDef: MethodDef, newToStringBody: Tree): scala.util.Try[MethodDef] =  scala.util.Try {
+  protected def patchToString(defDef: MethodDef, newToStringBody: Tree): scala.util.Try[MethodDef] = scala.util.Try {
     tpd.cpy.DefDef(defDef)(rhs = newToStringBody)
   }
 }
