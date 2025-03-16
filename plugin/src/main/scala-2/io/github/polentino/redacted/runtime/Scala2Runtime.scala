@@ -1,14 +1,15 @@
 package io.github.polentino.redacted.runtime
 
-import io.github.polentino.redacted.api.internal.RuntimeApi
 import scala.tools.nsc.Global
+
+import io.github.polentino.redacted.api.internal.RuntimeApi
 
 // this won't work, because we need a hold of `global` type ahead of creation
 // final case class ScalaSpecificRuntime[GlobalRef <: Global](global: Global) extends RuntimeApi { .. }
 trait Scala2Runtime[GlobalRef <: Global] extends RuntimeApi {
   protected val theGlobal: GlobalRef
   type Tree = theGlobal.Tree
-  type MethodDef = theGlobal.DefDef
+  type DefDef = theGlobal.DefDef
   type Symbol = theGlobal.Symbol
   type Position = theGlobal.Position
   type Literal = theGlobal.Literal
@@ -17,22 +18,16 @@ trait Scala2Runtime[GlobalRef <: Global] extends RuntimeApi {
   // todo: move to RuntimeApi
   private lazy val toStringTermName = theGlobal.TermName("toString")
 
-  protected def validate(tree: Tree): Option[ValidationResult] = for {
-    defDefInCaseClass <- extractMethodDefinition(tree)
-    toStringDefDef <- isToString(defDefInCaseClass)
-    redactedFields <- getRedactedFields(tree)
-  } yield ValidationResult(tree.symbol.owner, toStringDefDef, redactedFields)
+  protected def getCaseClassOwner(tree: Tree): Option[Symbol] =
+    Option(tree.symbol).collectFirst { case symbol if symbol.owner.isCaseClass => symbol.owner }
 
-  protected def extractMethodDefinition(tree: Tree): Option[MethodDef] = tree match {
-    case d: MethodDef if d.symbol.owner.isCaseClass => Some(d)
-    case _                                          => None
+  protected def isToString(tree: Tree): Option[DefDef] = tree match {
+    case d: DefDef if d.name == toStringTermName => Some(d)
+    case _                                       => None
   }
 
-  protected def isToString(defDef: MethodDef): Option[MethodDef] =
-    if (defDef.name == toStringTermName) Some(defDef) else None
-
-  protected def getRedactedFields(tree: Tree): Option[List[Symbol]] =
-    tree.symbol.owner
+  protected def getRedactedFields(owner: Symbol): Option[List[Symbol]] =
+    owner
       .primaryConstructor
       .paramss
       .flatten
@@ -52,7 +47,7 @@ trait Scala2Runtime[GlobalRef <: Global] extends RuntimeApi {
     theGlobal.Literal(Constant(name))
   }
 
-  protected def concatOperator: TermName = {
+  protected def stringConcatOperator: TermName = {
     theGlobal.TermName("$plus")
   }
 
@@ -62,19 +57,19 @@ trait Scala2Runtime[GlobalRef <: Global] extends RuntimeApi {
     theGlobal.typer.typed(Select(thisRef, field.name))
   }
 
-  protected def concat(lhs: Tree, concatOperator: TermName, rhs: Tree): Tree = {
+  protected def concat(lhs: Tree, stringConcatOperator: TermName, rhs: Tree): Tree = {
     import theGlobal._
-    theGlobal.typer.typed(Apply(Select(lhs, concatOperator), List(rhs)))
+    theGlobal.typer.typed(Apply(Select(lhs, stringConcatOperator), List(rhs)))
   }
 
-  protected def patchToString(defDef: MethodDef, newToStringBody: Tree): scala.util.Try[MethodDef] = scala.util.Try {
+  protected def patchToString(toStringDef: DefDef, newToStringBody: Tree): scala.util.Try[DefDef] = scala.util.Try {
     theGlobal.treeCopy.DefDef(
-      defDef,
-      defDef.mods,
-      defDef.name,
-      defDef.tparams,
-      defDef.vparamss,
-      defDef.tpt,
+      toStringDef,
+      toStringDef.mods,
+      toStringDef.name,
+      toStringDef.tparams,
+      toStringDef.vparamss,
+      toStringDef.tpt,
       newToStringBody)
   }
 }

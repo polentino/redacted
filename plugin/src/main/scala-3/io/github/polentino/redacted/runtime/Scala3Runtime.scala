@@ -17,31 +17,25 @@ import io.github.polentino.redacted.api.internal.RuntimeApi
 trait Scala3Runtime extends RuntimeApi {
   protected implicit lazy val context: Context
   type Tree = tpd.Tree
-  type MethodDef = tpd.DefDef
+  type DefDef = tpd.DefDef
   type Symbol = Symbols.Symbol
   type Position = SrcPos
   type Literal = tpd.Literal
   type TermName = Names.TermName
   private val toStringTermName = termName("toString")
 
-  protected def validate(tree: Tree): Option[ValidationResult] = for {
-    defDefInCaseClass <- extractMethodDefinition(tree)
-    toStringDefDef <- isToString(defDefInCaseClass)
-    redactedFields <- getRedactedFields(tree)
-  } yield ValidationResult(tree.symbol.owner, toStringDefDef, redactedFields)
-
-  protected def extractMethodDefinition(tree: Tree): Option[MethodDef] = {
-    tree match {
-      case d: tpd.DefDef if d.symbol.is(Flags.Method) && d.name == toStringTermName => Some(d)
-      case _                                                                        => None
-    }
+  protected def getCaseClassOwner(tree: Tree): Option[Symbol] = {
+    val owner = tree.symbol.owner
+    Option.when(owner.is(Flags.CaseClass))(owner)
   }
 
-  protected def isToString(defDef: MethodDef): Option[MethodDef] =
-    Option.when(defDef.name == toStringTermName)(defDef)
+  protected def isToString(tree: Tree): Option[DefDef] = tree match {
+    case d: tpd.DefDef if d.name == toStringTermName => Some(d)
+    case _                                           => None
+  }
 
-  protected def getRedactedFields(tree: Tree): Option[List[Symbol]] = {
-    val redactedFields = tree.symbol.owner.primaryConstructor.paramSymss.headOption.fold(List.empty[Symbol]) { params =>
+  protected def getRedactedFields(owner: Symbol): Option[List[Symbol]] = {
+    val redactedFields = owner.primaryConstructor.paramSymss.headOption.fold(List.empty[Symbol]) { params =>
       params
         .filter(_.annotations.exists { annotation =>
           annotation.tree match {
@@ -65,17 +59,17 @@ trait Scala3Runtime extends RuntimeApi {
   protected def toConstantLiteral(name: String): Literal =
     tpd.Literal(Constants.Constant(name))
 
-  protected def concatOperator: TermName = Names.termName("+")
+  protected def stringConcatOperator: TermName = Names.termName("+")
 
   protected def selectField(owner: Symbol, field: Symbol): Tree =
     tpd.This(owner.asClass).select(field.name)
 
-  protected def concat(lhs: Tree, concatOperator: TermName, rhs: Tree): Tree = {
-    lhs.select(concatOperator).appliedTo(rhs)
+  protected def concat(lhs: Tree, stringConcatOperator: TermName, rhs: Tree): Tree = {
+    lhs.select(stringConcatOperator).appliedTo(rhs)
   }
 
-  protected def patchToString(defDef: MethodDef, newToStringBody: Tree): scala.util.Try[MethodDef] = scala.util.Try {
-    tpd.cpy.DefDef(defDef)(rhs = newToStringBody)
+  protected def patchToString(toStringDef: DefDef, newToStringBody: Tree): scala.util.Try[DefDef] = scala.util.Try {
+    tpd.cpy.DefDef(toStringDef)(rhs = newToStringBody)
   }
 }
 
