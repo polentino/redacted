@@ -14,7 +14,7 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
   override val runsAfter: List[String] = List("parser")
 
   import global._
-  val runtimeApi: Scala2Runtime[global.type] = Scala2Runtime(global)
+  val runtimeApi: Scala2Runtime[global.type] = Scala2Runtime.create(global)
   val redactedApi: RedactedApi[runtimeApi.type] = RedactedApi(runtimeApi)
 
   override protected def newTransformer(unit: CompilationUnit): Transformer = new RedactedToStringTransformer()

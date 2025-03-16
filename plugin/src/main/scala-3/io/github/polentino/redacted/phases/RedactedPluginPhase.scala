@@ -5,8 +5,6 @@ import dotty.tools.dotc.core.Contexts.*
 import dotty.tools.dotc.plugins.PluginPhase
 import dotty.tools.dotc.transform.Pickler
 
-import scala.util.Try
-
 import io.github.polentino.redacted.api.RedactedApi
 import io.github.polentino.redacted.runtime.Scala3Runtime
 
@@ -19,8 +17,7 @@ final case class RedactedPluginPhase() extends PluginPhase {
   override def transformDefDef(tree: tpd.DefDef)(using ctx: Context): tpd.Tree = {
     val runtimeApi: Scala3Runtime = Scala3Runtime.create
     val redactedApi: RedactedApi[runtimeApi.type] = RedactedApi(runtimeApi)
-    val transformedTree = super.transformDefDef(tree)
-    redactedApi.process(transformedTree)
+    redactedApi.process(super.transformDefDef(tree))
   }
 }
 

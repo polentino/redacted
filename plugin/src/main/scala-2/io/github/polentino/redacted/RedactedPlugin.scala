@@ -1,7 +1,7 @@
 package io.github.polentino.redacted
 
 import scala.tools.nsc.Global
-import scala.tools.nsc.plugins.{Plugin, PluginComponent}
+import scala.tools.nsc.plugins._
 
 import io.github.polentino.redacted.components.RedactedPluginComponent
 
