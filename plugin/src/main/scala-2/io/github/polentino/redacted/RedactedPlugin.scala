@@ -1,8 +1,7 @@
 package io.github.polentino.redacted
 
 import scala.tools.nsc._
-import scala.tools.nsc.plugins.Plugin
-import scala.tools.nsc.plugins.PluginComponent
+import scala.tools.nsc.plugins.{Plugin, PluginComponent}
 
 final class RedactedPlugin(override val global: Global) extends Plugin {
 

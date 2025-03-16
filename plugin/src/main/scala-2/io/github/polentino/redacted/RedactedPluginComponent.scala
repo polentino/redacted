@@ -1,9 +1,9 @@
 package io.github.polentino.redacted
 
+import scala.tools.nsc.Global
 import scala.tools.nsc.plugins.PluginComponent
 import scala.tools.nsc.transform.Transform
 import scala.util.Success
-import scala.tools.nsc.Global
 
 class RedactedPluginComponent(val global: Global) extends PluginComponent with Transform {
 

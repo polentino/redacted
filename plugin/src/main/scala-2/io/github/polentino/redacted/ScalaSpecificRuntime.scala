@@ -22,10 +22,9 @@ trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
     redactedFields <- getRedactedFields(tree)
   } yield ValidationResult(tree.symbol.owner, toStringDefDef, redactedFields)
 
-
   protected def extractMethodDefinition(tree: Tree): Option[MethodDef] = tree match {
     case d: MethodDef if d.symbol.owner.isCaseClass => Some(d)
-    case _                                       => None
+    case _                                          => None
   }
 
   protected def isToString(defDef: MethodDef): Option[MethodDef] =
@@ -68,7 +67,7 @@ trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
     theGlobal.typer.typed(Apply(Select(lhs, concatOperator), List(rhs)))
   }
 
-  protected def patchToString(defDef: MethodDef, newToStringBody: Tree): scala.util.Try[MethodDef] =  scala.util.Try {
+  protected def patchToString(defDef: MethodDef, newToStringBody: Tree): scala.util.Try[MethodDef] = scala.util.Try {
     theGlobal.treeCopy.DefDef(
       defDef,
       defDef.mods,
@@ -82,8 +81,8 @@ trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
 
 object ScalaSpecificRuntime {
 
-  def apply(global: Global): ScalaSpecificRuntime[global.type] = new ScalaSpecificRuntime[global.type ] {
-    override protected val theGlobal: global.type  = global
+  def apply(global: Global): ScalaSpecificRuntime[global.type] = new ScalaSpecificRuntime[global.type] {
+    override protected val theGlobal: global.type = global
     import theGlobal._
   }
 }
