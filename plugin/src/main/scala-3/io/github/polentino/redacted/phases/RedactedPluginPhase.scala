@@ -10,11 +10,11 @@ import scala.util.Try
 import io.github.polentino.redacted.api.RedactedApi
 import io.github.polentino.redacted.runtime.Scala3Runtime
 
-final case class PatchToString() extends PluginPhase {
+final case class RedactedPluginPhase() extends PluginPhase {
 
   override val runsAfter: Set[String] = Set(Pickler.name)
 
-  override def phaseName: String = PatchToString.name
+  override def phaseName: String = RedactedPluginPhase.name
 
   override def transformDefDef(tree: tpd.DefDef)(using ctx: Context): tpd.Tree = {
     val runtimeApi: Scala3Runtime = Scala3Runtime.create
@@ -24,6 +24,6 @@ final case class PatchToString() extends PluginPhase {
   }
 }
 
-object PatchToString {
+object RedactedPluginPhase {
   final val name: String = "patch-tostring-phase"
 }
