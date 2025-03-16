@@ -84,10 +84,10 @@ trait RuntimeApi { self =>
     *   a [[ValidationResult]] object containing the objects needed to begin the redaction process
     */
   private def validate(tree: Tree): Option[ValidationResult] = for {
-    toStringDefDef <- isToString(tree)
-    owner <- caseClassOwner(tree)
-    redactedFields <- redactedFields(owner)
-  } yield ValidationResult(owner, toStringDefDef, redactedFields)
+    toStringDefDef <- extractToString(tree)
+    caseClasOwner <- caseClassOwner(tree)
+    redactedFields <- redactedFields(caseClasOwner)
+  } yield ValidationResult(caseClasOwner, toStringDefDef, redactedFields)
 
   /** Bulk of the redaction process: here we build up the new body implementation of the `toString` method, based on the
     * fields contained in the [[ValidationResult]] in the following form
@@ -147,7 +147,7 @@ trait RuntimeApi { self =>
     * @return
     *   an [[Option]] containing either the [[DefDef]] of the `toString` method, or [[None]]
     */
-  protected def isToString(tree: Tree): Option[DefDef]
+  protected def extractToString(tree: Tree): Option[DefDef]
 
   /** Returns a list with all the [[Symbol]](s) annotated with `@redacted` from the given `owner`
     *

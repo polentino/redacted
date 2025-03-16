@@ -20,7 +20,7 @@ trait Scala2Runtime[GlobalRef <: Global] extends RuntimeApi {
   override protected def caseClassOwner(tree: Tree): Option[Symbol] =
     Option(tree.symbol).collectFirst { case symbol if symbol.owner.isCaseClass => symbol.owner }
 
-  override protected def isToString(tree: Tree): Option[DefDef] = tree match {
+  override protected def extractToString(tree: Tree): Option[DefDef] = tree match {
     case d: DefDef if d.name == toStringTermName => Some(d)
     case _                                       => None
   }

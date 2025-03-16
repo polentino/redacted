@@ -26,7 +26,7 @@ trait Scala3Runtime extends RuntimeApi {
   override protected def caseClassOwner(tree: Tree): Option[Symbol] =
     Option(tree.symbol).collectFirst { case symbol if symbol.owner.is(Flags.CaseClass) => symbol.owner }
 
-  override protected def isToString(tree: Tree): Option[DefDef] = tree match {
+  override protected def extractToString(tree: Tree): Option[DefDef] = tree match {
     case d: tpd.DefDef if d.name == toStringTermName => Some(d)
     case _                                           => None
   }
