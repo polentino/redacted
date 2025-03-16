@@ -1,3 +1,14 @@
+## [0.7.0](https://github.com/polentino/redacted/compare/v0.6.2...v0.7.0) (2025-03-16)
+
+### 🤖 CI/CD
+
+* ensure `semantic-release` runs on main only ([9998144](https://github.com/polentino/redacted/commit/999814484b0c9d8d1244160d3b551ee8712090f3))
+
+### 📖 Docs
+
+* add scala-steward badge ([fae76eb](https://github.com/polentino/redacted/commit/fae76eb7fc7def004179092a4603dc01b3ef317f))
+* provide demos for both scala 3 and 2 ([5b0395c](https://github.com/polentino/redacted/commit/5b0395cd90da21ee4a11573b2a8a5f9afe8a8575))
+
 ## [0.6.2](https://github.com/polentino/redacted/compare/v0.6.1...v0.6.2) (2025-02-23)
 
 ### 🤖 CI/CD
