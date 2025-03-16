@@ -23,43 +23,43 @@ final case class PatchToString() extends PluginPhase {
     // let's align with Scala 2 and try to transform the DefDef corresponding to `toString` definition
     val runtimeApi: ScalaSpecificRuntime = ScalaSpecificRuntime.create
     val redactedApi: RedactedApi[runtimeApi.type] = RedactedApi(runtimeApi)
-    redactedApi.process(tree).getOrElse(tree)
-    super.transformDefDef(tree)
+    val transformedTree = super.transformDefDef(tree)
+    redactedApi.process(transformedTree).getOrElse(transformedTree)
   }
 
-  override def transformTypeDef(tree: tpd.TypeDef)(using Context): tpd.Tree = validate(tree) match {
-    case None => tree
-    case Some(validatedTree) =>
-      val maybeNewTypeDef = for {
-        template <- getTreeTemplate(validatedTree)
-          .withLog(s"can't extract proper `tpd.Template` from ${tree.name}")
-
-        toStringBody <- createToStringBody(validatedTree)
-          .withLog(s"couldn't create proper `toString()` body")
-
-        newTemplate <- patchToString(template, toStringBody)
-          .withLog(s"couldn't patch `toString()` body into ${tree.name} template")
-
-        result <- patchTypeDef(validatedTree, newTemplate)
-          .withLog(s"couldn't patch ${tree.name} template into ${tree.name} typedef")
-      } yield result
-
-      maybeNewTypeDef match {
-        case Some(newTypeDef) => newTypeDef
-        case None =>
-          report.warning(
-            s"""
-               |Dang, couldn't patch properly ${tree.name} :(
-               |If you believe this is an error: please report the issue, along with a minimum reproducible example,
-               |at the following link: https://github.com/polentino/redacted/issues/new .
-               |
-               |Thank you 🙏
-               |""".stripMargin,
-            tree.srcPos
-          )
-          tree
-      }
-  }
+//  override def transformTypeDef(tree: tpd.TypeDef)(using Context): tpd.Tree = validate(tree) match {
+//    case None => tree
+//    case Some(validatedTree) =>
+//      val maybeNewTypeDef = for {
+//        template <- getTreeTemplate(validatedTree)
+//          .withLog(s"can't extract proper `tpd.Template` from ${tree.name}")
+//
+//        toStringBody <- createToStringBody(validatedTree)
+//          .withLog(s"couldn't create proper `toString()` body")
+//
+//        newTemplate <- patchToString(template, toStringBody)
+//          .withLog(s"couldn't patch `toString()` body into ${tree.name} template")
+//
+//        result <- patchTypeDef(validatedTree, newTemplate)
+//          .withLog(s"couldn't patch ${tree.name} template into ${tree.name} typedef")
+//      } yield result
+//
+//      maybeNewTypeDef match {
+//        case Some(newTypeDef) => newTypeDef
+//        case None =>
+//          report.warning(
+//            s"""
+//               |Dang, couldn't patch properly ${tree.name} :(
+//               |If you believe this is an error: please report the issue, along with a minimum reproducible example,
+//               |at the following link: https://github.com/polentino/redacted/issues/new .
+//               |
+//               |Thank you 🙏
+//               |""".stripMargin,
+//            tree.srcPos
+//          )
+//          tree
+//      }
+//  }
 }
 
 object PatchToString {
