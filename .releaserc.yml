@@ -37,6 +37,8 @@ analyzeCommits:
         release: false
       - type: feature
         release: minor
+      - type: feat
+        release: minor
       - type: hotfix
         release: patch
       - type: fix
@@ -69,6 +71,9 @@ generateNotes:
           section: 📖 Docs
           hidden: false
         - type: feature
+          section: ✨ Features
+          hidden: false
+        - type: feat
           section: ✨ Features
           hidden: false
         - type: hotfix

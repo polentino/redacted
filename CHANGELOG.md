@@ -4,6 +4,10 @@
 
 * ensure `semantic-release` runs on main only ([9998144](https://github.com/polentino/redacted/commit/999814484b0c9d8d1244160d3b551ee8712090f3))
 
+### ✨ Features
+
+* add generic API ([143c097](https://github.com/polentino/redacted/commit/143c0972f5c0483868397f77ce08af717dde0ca3))
+
 ### 📖 Docs
 
 * add scala-steward badge ([fae76eb](https://github.com/polentino/redacted/commit/fae76eb7fc7def004179092a4603dc01b3ef317f))
