@@ -1,10 +1,11 @@
-package io.github.polentino.redacted
+package io.github.polentino.redacted.runtime
 
+import io.github.polentino.redacted.api.internal.RuntimeApi
 import scala.tools.nsc.Global
 
 // this won't work, because we need a hold of `global` type ahead of creation
 // final case class ScalaSpecificRuntime[GlobalRef <: Global](global: Global) extends RuntimeApi { .. }
-trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
+trait Scala2Runtime[GlobalRef <: Global] extends RuntimeApi {
   protected val theGlobal: GlobalRef
   type Tree = theGlobal.Tree
   type MethodDef = theGlobal.DefDef
@@ -52,7 +53,6 @@ trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
   }
 
   protected def concatOperator: TermName = {
-    import theGlobal._
     theGlobal.TermName("$plus")
   }
 
@@ -79,10 +79,9 @@ trait ScalaSpecificRuntime[GlobalRef <: Global] extends RuntimeApi {
   }
 }
 
-object ScalaSpecificRuntime {
+object Scala2Runtime {
 
-  def apply(global: Global): ScalaSpecificRuntime[global.type] = new ScalaSpecificRuntime[global.type] {
+  def apply(global: Global): Scala2Runtime[global.type] = new Scala2Runtime[global.type] {
     override protected val theGlobal: global.type = global
-    import theGlobal._
   }
 }

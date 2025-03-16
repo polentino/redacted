@@ -2,16 +2,13 @@ package io.github.polentino.redacted.phases
 
 import dotty.tools.dotc.ast.tpd
 import dotty.tools.dotc.core.Contexts.*
-import dotty.tools.dotc.core.{Names, Symbols}
 import dotty.tools.dotc.plugins.PluginPhase
-import dotty.tools.dotc.report
 import dotty.tools.dotc.transform.Pickler
 
 import scala.util.Try
 
-import io.github.polentino.redacted.helpers.AstOps.*
-import io.github.polentino.redacted.helpers.PluginOps.*
-import io.github.polentino.redacted.{RedactedApi, RuntimeApi}
+import io.github.polentino.redacted.api.RedactedApi
+import io.github.polentino.redacted.runtime.Scala3Runtime
 
 final case class PatchToString() extends PluginPhase {
 
@@ -20,46 +17,11 @@ final case class PatchToString() extends PluginPhase {
   override def phaseName: String = PatchToString.name
 
   override def transformDefDef(tree: tpd.DefDef)(using ctx: Context): tpd.Tree = {
-    // let's align with Scala 2 and try to transform the DefDef corresponding to `toString` definition
-    val runtimeApi: ScalaSpecificRuntime = ScalaSpecificRuntime.create
+    val runtimeApi: Scala3Runtime = Scala3Runtime.create
     val redactedApi: RedactedApi[runtimeApi.type] = RedactedApi(runtimeApi)
     val transformedTree = super.transformDefDef(tree)
-    redactedApi.process(transformedTree).getOrElse(transformedTree)
+    redactedApi.process(transformedTree)
   }
-
-//  override def transformTypeDef(tree: tpd.TypeDef)(using Context): tpd.Tree = validate(tree) match {
-//    case None => tree
-//    case Some(validatedTree) =>
-//      val maybeNewTypeDef = for {
-//        template <- getTreeTemplate(validatedTree)
-//          .withLog(s"can't extract proper `tpd.Template` from ${tree.name}")
-//
-//        toStringBody <- createToStringBody(validatedTree)
-//          .withLog(s"couldn't create proper `toString()` body")
-//
-//        newTemplate <- patchToString(template, toStringBody)
-//          .withLog(s"couldn't patch `toString()` body into ${tree.name} template")
-//
-//        result <- patchTypeDef(validatedTree, newTemplate)
-//          .withLog(s"couldn't patch ${tree.name} template into ${tree.name} typedef")
-//      } yield result
-//
-//      maybeNewTypeDef match {
-//        case Some(newTypeDef) => newTypeDef
-//        case None =>
-//          report.warning(
-//            s"""
-//               |Dang, couldn't patch properly ${tree.name} :(
-//               |If you believe this is an error: please report the issue, along with a minimum reproducible example,
-//               |at the following link: https://github.com/polentino/redacted/issues/new .
-//               |
-//               |Thank you 🙏
-//               |""".stripMargin,
-//            tree.srcPos
-//          )
-//          tree
-//      }
-//  }
 }
 
 object PatchToString {

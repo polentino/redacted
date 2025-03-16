@@ -1,4 +1,4 @@
-package io.github.polentino.redacted
+package io.github.polentino.redacted.api.internal
 
 import scala.util.{Failure, Success}
 
@@ -13,25 +13,44 @@ trait RuntimeApi {
 
   final case class ValidationResult(owner: Symbol, toStringDef: MethodDef, redactedFields: List[Symbol])
 
-  final def process(tree: Tree): Option[Tree] = for {
-    validationResult <- validate(tree)
-    _ = println(s"BUILDING TO STRING BODY FOR ${getOwnerName(tree)}")
-    body <- createToStringBody(validationResult) match {
-      case Failure(exception) =>
-        println(s"createToStringBody failed for ${getOwnerName(tree)}: ${exception.printStackTrace()}")
-        None
-      case Success(value) => Some(value)
+  final def process(tree: Tree): Tree = {
+    val newToStringBody = for {
+      validationResult <- validate(tree)
+      _ = println(s"BUILDING TO STRING BODY FOR ${getOwnerName(tree)}")
+      body <- createToStringBody(validationResult) match {
+        case Failure(exception) =>
+          println(s"createToStringBody failed for ${getOwnerName(tree)}: ${exception.printStackTrace()}")
+          None
+        case Success(value) => Some(value)
+      }
+      _ = println(s"BUILT TO STRING BODY FOR ${getOwnerName(tree)}")
+      newMethodDefinition <- patchToString(validationResult.toStringDef, body) match {
+        case Failure(exception) =>
+          println(s"patchToString failed for ${getOwnerName(tree)}: ${exception.printStackTrace()}")
+          None
+        case Success(value) => Some(value)
+      }
+      _ = println(s"PATCHED ${getOwnerName(tree)}")
+      _ = println(newMethodDefinition.toString)
+    } yield newMethodDefinition
+
+    newToStringBody match {
+      case Some(value) => value
+      case None        =>
+//        report.warning(
+//          s"""
+//             |Dang, couldn't patch properly ${tree.name} :(
+//             |If you believe this is an error: please report the issue, along with a minimum reproducible example,
+//             |at the following link: https://github.com/polentino/redacted/issues/new .
+//             |
+//             |Thank you 🙏
+//             |""".stripMargin,
+//          tree.srcPos
+//        )
+
+        tree
     }
-    _ = println(s"BUILT TO STRING BODY FOR ${getOwnerName(tree)}")
-    newMethodDefinition <- patchToString(validationResult.toStringDef, body) match {
-      case Failure(exception) =>
-        println(s"patchToString failed for ${getOwnerName(tree)}: ${exception.printStackTrace()}")
-        None
-      case Success(value) => Some(value)
-    }
-    _ = println(s"PATCHED ${getOwnerName(tree)}")
-    _ = println(newMethodDefinition.toString)
-  } yield newMethodDefinition
+  }
 
   protected def validate(tree: Tree): Option[ValidationResult]
 

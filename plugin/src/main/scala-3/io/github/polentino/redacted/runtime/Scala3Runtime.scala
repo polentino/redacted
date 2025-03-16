@@ -1,4 +1,4 @@
-package io.github.polentino.redacted.phases
+package io.github.polentino.redacted.runtime
 
 import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.*
@@ -12,9 +12,9 @@ import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.util.Spans.Span
 import dotty.tools.dotc.util.SrcPos
 
-import io.github.polentino.redacted.RuntimeApi
+import io.github.polentino.redacted.api.internal.RuntimeApi
 
-trait ScalaSpecificRuntime extends RuntimeApi {
+trait Scala3Runtime extends RuntimeApi {
   protected implicit lazy val context: Context
   type Tree = tpd.Tree
   type MethodDef = tpd.DefDef
@@ -79,9 +79,9 @@ trait ScalaSpecificRuntime extends RuntimeApi {
   }
 }
 
-object ScalaSpecificRuntime {
+object Scala3Runtime {
 
-  def create(using ctx: Context): ScalaSpecificRuntime = new ScalaSpecificRuntime {
+  def create(using ctx: Context): Scala3Runtime = new Scala3Runtime {
     implicit lazy val context: Context = ctx
   }
 }
