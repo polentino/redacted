@@ -23,37 +23,36 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
 
     override def transform(tree: Tree): Tree = {
       val transformedTree = super.transform(tree)
+      redactedApi.process(transformedTree).getOrElse(transformedTree) // it compiles !
 
-      redactedApi.process(transformedTree) // it compiles !
-
-      validate(transformedTree) match {
-        case Some(toStringDef) =>
-          val maybePatchedToStringDef = for {
-            newToStringBody <- createToStringBody(toStringDef)
-              .withLog(s"couldn't create proper `toString()` body")
-
-            patchedToStringDef <- patchToString(toStringDef, newToStringBody)
-              .withLog(s"couldn't patch `toString` body into existing method definition")
-          } yield patchedToStringDef
-
-          maybePatchedToStringDef match {
-            case Some(neeDefDef) => neeDefDef
-            case None =>
-              reporter.warning(
-                tree.pos,
-                s"""
-                   |Dang, couldn't patch properly ${tree.symbol.name} :(
-                   |If you believe this is an error: please report the issue, along with a minimum reproducible example,
-                   |at the following link: https://github.com/polentino/redacted/issues/new .
-                   |
-                   |Thank you 🙏
-                   |""".stripMargin
-              )
-              transformedTree
-          }
-
-        case None => transformedTree
-      }
+//      validate(transformedTree) match {
+//        case Some(toStringDef) =>
+//          val maybePatchedToStringDef = for {
+//            newToStringBody <- createToStringBody(toStringDef)
+//              .withLog(s"couldn't create proper `toString()` body")
+//
+//            patchedToStringDef <- patchToString(toStringDef, newToStringBody)
+//              .withLog(s"couldn't patch `toString` body into existing method definition")
+//          } yield patchedToStringDef
+//
+//          maybePatchedToStringDef match {
+//            case Some(neeDefDef) => neeDefDef
+//            case None =>
+//              reporter.warning(
+//                tree.pos,
+//                s"""
+//                   |Dang, couldn't patch properly ${tree.symbol.name} :(
+//                   |If you believe this is an error: please report the issue, along with a minimum reproducible example,
+//                   |at the following link: https://github.com/polentino/redacted/issues/new .
+//                   |
+//                   |Thank you 🙏
+//                   |""".stripMargin
+//              )
+//              transformedTree
+//          }
+//
+//        case None => transformedTree
+//      }
     }
 
     /** Ensures that the `Tree` passed as parameter is owned by a case class, its actual type is a `DefDef` of the
@@ -114,13 +113,14 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
       */
     private def createToStringBody(defDef: DefDef): scala.util.Try[Tree] = scala.util.Try {
       val className = defDef.symbol.owner.unexpandedName.toString
-      val redactedFields = getRedactedFields(defDef.symbol.owner).getOrElse(Nil)
       val memberNames = defDef.symbol.owner.primaryConstructor.paramss.headOption.getOrElse(Nil)
+      val redactedFields = getRedactedFields(defDef.symbol.owner).getOrElse(Nil)
       val classPrefix = (className + "(").toConstantLiteral
       val classSuffix = ")".toConstantLiteral
       val commaSymbol = ",".toConstantLiteral
       val asterisksSymbol = "***".toConstantLiteral
       val concatOperator = TermName("$plus")
+
       val thisRef: Tree = global.typer.typed(This(defDef.symbol.owner))
 
       val fragments: List[Tree] = memberNames.map(m =>

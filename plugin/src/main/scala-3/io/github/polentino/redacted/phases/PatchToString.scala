@@ -23,7 +23,7 @@ final case class PatchToString() extends PluginPhase {
     // let's align with Scala 2 and try to transform the DefDef corresponding to `toString` definition
     val runtimeApi: ScalaSpecificRuntime = ScalaSpecificRuntime.create
     val redactedApi: RedactedApi[runtimeApi.type] = RedactedApi(runtimeApi)
-    redactedApi.process(tree)
+    redactedApi.process(tree).getOrElse(tree)
     super.transformDefDef(tree)
   }
 

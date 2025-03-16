@@ -118,7 +118,7 @@ object PluginOps {
   def createToStringBody(tree: tpd.TypeDef)(using Context): Try[tpd.Tree] = Try {
     val className = tree.name.toString
     val memberNames = tree.symbol.primaryConstructor.paramSymss.headOption.getOrElse(Nil)
-    val annotationSymbol = redactedSymbol
+    val annotationSymbol = redactedSymbol // todo not needed
     val classPrefix = (className + "(").toConstantLiteral
     val classSuffix = ")".toConstantLiteral
     val commaSymbol = ",".toConstantLiteral
