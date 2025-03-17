@@ -50,9 +50,9 @@ trait RuntimeApi { self =>
     */
   final def process(tree: Tree): Tree = validate(tree).fold(tree) { validationResult =>
     val maybeNewToStringBody = for {
-      body <- createToStringBody(validationResult).toOption
-      newDefDefinition <- patchToString(validationResult.toStringDef, body).toOption
-    } yield newDefDefinition
+      toStringBodyDef <- createToStringBody(validationResult).toOption
+      newToStringBodyDef <- patchToString(validationResult.toStringDef, toStringBodyDef).toOption
+    } yield newToStringBodyDef
 
     maybeNewToStringBody match {
       case Some(newToStringBody) => newToStringBody
@@ -105,31 +105,20 @@ trait RuntimeApi { self =>
     */
   private def createToStringBody(result: ValidationResult): util.Try[Tree] = util.Try {
     val ownerClassName = ownerName(result.toStringDef)
-    val memberNames = constructorFields(result.caseClassOwner)
+    val ctorFields = constructorFields(result.caseClassOwner)
     val classPrefix = constantLiteral(ownerClassName + "(")
     val classSuffix = constantLiteral(")")
     val commaSymbol = constantLiteral(",")
     val asterisksSymbol = constantLiteral("***")
 
-    val fragments = memberNames.map(field =>
+    val fragmentsSelection = ctorFields.map(field =>
       if (result.redactedFields.contains(field)) asterisksSymbol
       else selectField(result.caseClassOwner, field))
+      .flatMap(field => List(field, commaSymbol))
+      .init
 
-    def buildToStringTree(fragments: List[Tree]): Tree = {
-
-      def concatAll(l: List[Tree]): List[Tree] = l match {
-        case Nil          => Nil
-        case head :: Nil  => List(head)
-        case head :: tail => List(head, commaSymbol) ++ concatAll(tail)
-      }
-
-      val res = concatAll(fragments).fold(classPrefix) { case (accumulator, fragment) =>
-        concat(accumulator, stringConcatOperator, fragment)
-      }
-      concat(res, stringConcatOperator, classSuffix)
-    }
-
-    buildToStringTree(fragments)
+    (classPrefix +: fragmentsSelection :+ classSuffix)
+      .reduce[Tree] { case (lhs, rhs) => concat(lhs, stringConcatOperator, rhs) }
   }
 
   /** Given a [[Tree]] passed as parameter, tries to retrieve its `case class` owner.
