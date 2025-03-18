@@ -12,6 +12,7 @@
 
 <!-- TOC -->
 * [Redacted](#redacted)
+  * [Introduction](#introduction)
   * [Usage](#usage)
     * [Nested case class](#nested-case-class)
     * [Nested case class with upper level annotation](#nested-case-class-with-upper-level-annotation)
@@ -22,6 +23,8 @@
   * [Improvements](#improvements)
   * [Credits](#credits)
 <!-- TOC -->
+
+## Introduction
 
 In Scala, `case class`(es) are omnipresent: they are the building blocks for complex business domain models, due to how
 easily they can be defined and instantiated; on top of that, the Scala compiler provides a convenient `toString` method
