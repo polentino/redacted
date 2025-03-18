@@ -108,11 +108,19 @@ prepare:
       if [[ -f "version.sbt" ]]; then
         echo 'ThisBuild / version := "${nextRelease.version}"' > version.sbt
       fi;
+      if [[ -f "demo/redacted-example.scala" ]]; then
+        sed -i 's/${lastRelease.version}/${nextRelease.version}/g' demo/redacted-example.scala
+      fi;
+      if [[ -f "demo/redacted-example-scala2.scala" ]]; then
+        sed -i 's/${lastRelease.version}/${nextRelease.version}/g' demo/redacted-example-scala2.scala
+      fi;
   - path: "@semantic-release/git"
     message: "chore(release): v${lastRelease.version || '0.0.0'} → v${nextRelease.version}"
     assets:
       - CHANGELOG.md
       - build.sbt
       - version.sbt
+      - demo/redacted-example.scala
+      - demo/redacted-example-scala2.scala
 publish:
   - path: "@semantic-release/github"
