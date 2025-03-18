@@ -10,6 +10,19 @@
 
 ![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
+<!-- TOC -->
+* [Redacted](#redacted)
+  * [Usage](#usage)
+    * [Nested case class](#nested-case-class)
+    * [Nested case class with upper level annotation](#nested-case-class-with-upper-level-annotation)
+    * [Value case classes](#value-case-classes)
+    * [Note on curried case classes](#note-on-curried-case-classes)
+  * [Supported Scala Versions](#supported-scala-versions)
+  * [How it works](#how-it-works)
+  * [Improvements](#improvements)
+  * [Credits](#credits)
+<!-- TOC -->
+
 In Scala, `case class`(es) are omnipresent: they are the building blocks for complex business domain models, due to how
 easily they can be defined and instantiated; on top of that, the Scala compiler provides a convenient `toString` method
 for us that will pretty print in console/log their content, for example:
@@ -176,7 +189,7 @@ Curried(0, Berfu)
 Therefore, the same behavior is being kept in the customized `toString` implementation.
 
 
-## Supported Versions
+## Supported Scala Versions
 
 | Scala Version |       LTS ?        |
 |:-------------:|:------------------:|
