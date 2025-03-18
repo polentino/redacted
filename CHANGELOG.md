@@ -1,3 +1,20 @@
+## [0.7.1](https://github.com/polentino/redacted/compare/v0.7.0...v0.7.1) (2025-03-18)
+
+### 🤖 CI/CD
+
+* update deps in redacted-example{-scala2}.scala automatically ([3113a44](https://github.com/polentino/redacted/commit/3113a44dae70872fd8b29c57b389daa8a2cda27e))
+
+### 📖 Docs
+
+* add supported scala versions to README.md ([504305a](https://github.com/polentino/redacted/commit/504305a58c3e1c73a1f842e5d604b2ee4696023a))
+* added introduction section ([5dea1a4](https://github.com/polentino/redacted/commit/5dea1a49181b97006ad4c69a8126ed763f6b5d54))
+* added table of contents ([60806ec](https://github.com/polentino/redacted/commit/60806ecc36a9a86d0ceb7d6b5365bc0b8826545c))
+
+### 🩹 Fixes
+
+* improve toString body creation ([1fbd12d](https://github.com/polentino/redacted/commit/1fbd12dc73db854f24147f6e24f4106576c87b73))
+* support for Scala 3.6.4 ([a19e13a](https://github.com/polentino/redacted/commit/a19e13afae4db9e58eb7d37352be48740a20c1db))
+
 ## [0.7.0](https://github.com/polentino/redacted/compare/v0.6.2...v0.7.0) (2025-03-16)
 
 ### 🤖 CI/CD
