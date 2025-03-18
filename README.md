@@ -6,7 +6,7 @@
 
 # Redacted
 
->  Prevents leaking sensitive fields defined inside `case class`.
+> Prevents leaking sensitive fields defined inside `case class`.
 
 ![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
@@ -175,6 +175,25 @@ Curried(0, Berfu)
 
 Therefore, the same behavior is being kept in the customized `toString` implementation.
 
+
+## Supported Versions
+
+| Scala Version |       LTS ?        |
+|:-------------:|:------------------:|
+|     3.6.4     |        :x:         |
+|     3.5.2     |        :x:         |
+|     3.4.3     |        :x:         |
+|     3.3.5     | :white_check_mark: |
+|     3.3.4     | :white_check_mark: |
+|     3.3.3     | :white_check_mark: |
+|     3.3.1     | :white_check_mark: |
+|     3.3.0     | :white_check_mark: |
+|     3.2.2     |        :x:         |
+|     3.1.3     |        :x:         |
+|    2.13.16    |        :x:         |
+|    2.12.20    |        :x:         |
+
+
 ## How it works
 
 Given a case class with at least one field annotated with `@redacted`, i.e.
@@ -200,7 +219,8 @@ depending on the presence (or not) of `@redacted`, resulting in an implementatio
 
 ```scala 3
 def toString(): String =
-  "<class name>(" + this.< field not redacted > + "," + "***" + ... +")"
+  "<class name>(" + this.< field not redacted > + "," + "***" +
+...+")"
 ```
 
 ## Improvements
