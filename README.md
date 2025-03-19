@@ -196,7 +196,7 @@ Therefore, the same behavior is being kept in the customized `toString` implemen
 ## Supported Scala Versions
 
 `redacted` supports all Scala versions listed in the table below. However, it is advised to use the ones with a green
-checkmark (:white_check_mark:) since those are the Long Term Support
+checkmark ( :white_check_mark: ) since those are the Long Term Support
 ones [specified in the Scala website](https://www.scala-lang.org/download/all.html).
 
 | Scala Version |       LTS ?        |
