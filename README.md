@@ -11,17 +11,19 @@
 ![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
 <!-- TOC -->
+
 * [Redacted](#redacted)
-  * [Introduction](#introduction)
-  * [Usage](#usage)
-    * [Nested case class](#nested-case-class)
-    * [Nested case class with upper level annotation](#nested-case-class-with-upper-level-annotation)
-    * [Value case classes](#value-case-classes)
-    * [Note on curried case classes](#note-on-curried-case-classes)
-  * [Supported Scala Versions](#supported-scala-versions)
-  * [How it works](#how-it-works)
-  * [Improvements](#improvements)
-  * [Credits](#credits)
+    * [Introduction](#introduction)
+    * [Usage](#usage)
+        * [Nested case class](#nested-case-class)
+        * [Nested case class with upper level annotation](#nested-case-class-with-upper-level-annotation)
+        * [Value case classes](#value-case-classes)
+        * [Note on curried case classes](#note-on-curried-case-classes)
+    * [Supported Scala Versions](#supported-scala-versions)
+    * [How it works](#how-it-works)
+    * [Improvements](#improvements)
+    * [Credits](#credits)
+
 <!-- TOC -->
 
 ## Introduction
@@ -191,24 +193,26 @@ Curried(0, Berfu)
 
 Therefore, the same behavior is being kept in the customized `toString` implementation.
 
-
 ## Supported Scala Versions
+
+`redacted` supports all Scala versions listed in the table below. However, it is advised to use the ones with a green
+checkmark (:white_check_mark:) since those are the Long Term Support
+ones [specified in the Scala website](https://www.scala-lang.org/download/all.html).
 
 | Scala Version |       LTS ?        |
 |:-------------:|:------------------:|
-|     3.6.4     |        :x:         |
-|     3.5.2     |        :x:         |
-|     3.4.3     |        :x:         |
+|     3.6.4     |         -          |
+|     3.5.2     |         -          |
+|     3.4.3     |         -          |
 |     3.3.5     | :white_check_mark: |
 |     3.3.4     | :white_check_mark: |
 |     3.3.3     | :white_check_mark: |
 |     3.3.1     | :white_check_mark: |
 |     3.3.0     | :white_check_mark: |
-|     3.2.2     |        :x:         |
-|     3.1.3     |        :x:         |
-|    2.13.16    |        :x:         |
-|    2.12.20    |        :x:         |
-
+|     3.2.2     |         -          |
+|     3.1.3     |         -          |
+|    2.13.16    |         -          |
+|    2.12.20    |         -          |
 
 ## How it works
 
