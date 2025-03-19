@@ -13,7 +13,7 @@ case class UserDB(id: Long, username: String, email: Email, password: Password, 
 @main def run(): Unit = {
   val user = UserDB(0L, "berfu", Email("berfu@somemail.com"), Password("e54d6f7gy8huinjomp"), 27)
 
-  println(s"found user: ${user}") // sensitive fields will be redacted, if you dump the instance by mistake ...
+  println(s"found user: ${user}") // sensitive fields will be redacted, if you dump the instance by mistake
   println(s"found user: ${user.toString}") // .. or explicitly call `toString` on it
 
   println( // but, accessed individually, they'll return their actual content
