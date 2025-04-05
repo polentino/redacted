@@ -11,19 +11,20 @@
 ![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
 <!-- TOC -->
-
 * [Redacted](#redacted)
-    * [Introduction](#introduction)
+  * [Introduction](#introduction)
+  * [How to configure and use it](#how-to-configure-and-use-it)
+    * [1. Configure via sbt plugin (preferred)](#1-configure-via-sbt-plugin-preferred)
+    * [2. Configure via manual intervention](#2-configure-via-manual-intervention)
     * [Usage](#usage)
-        * [Nested case class](#nested-case-class)
-        * [Nested case class with upper level annotation](#nested-case-class-with-upper-level-annotation)
-        * [Value case classes](#value-case-classes)
-        * [Note on curried case classes](#note-on-curried-case-classes)
-    * [Supported Scala Versions](#supported-scala-versions)
-    * [How it works](#how-it-works)
-    * [Improvements](#improvements)
-    * [Credits](#credits)
-
+    * [Nested case class](#nested-case-class)
+    * [Nested case class with upper level annotation](#nested-case-class-with-upper-level-annotation)
+    * [Value case classes](#value-case-classes)
+    * [Note on curried case classes](#note-on-curried-case-classes)
+  * [Supported Scala Versions](#supported-scala-versions)
+  * [How it works](#how-it-works)
+  * [Improvements](#improvements)
+  * [Credits](#credits)
 <!-- TOC -->
 
 ## Introduction
