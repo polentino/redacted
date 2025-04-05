@@ -64,10 +64,29 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 
 `@redacted` to the rescue!
 
-## Usage
+## How to configure and use it
 
-No matter of the scala version you use (redacted is available for Scala `2.12.x`, `2.13.x` and all `3.x` LTS versions),
-all you have to do is open `build.sbt` file, add the following lines
+### 1. Configure via sbt plugin (preferred)
+
+In your `project/plugins.sbt` add the following line
+
+```scala
+addSbtPlugin("io.github.polentino" % "sbt-redacted" % "1.0.0")
+```
+
+and then enable it in your specific (sub)project in `build.sbt` like so
+
+```scala
+lazy val root = (project in file("."))
+  .enablePlugins(RedactedPlugin)
+  .setting(
+    redactedVersion := "0.7.1" // optional; the plugin defaults to "0.7.1"
+  )
+```
+
+### 2. Configure via manual intervention
+
+In your `build.sbt` add the following line
 
 ```scala 3
 val redactedVersion = "x.y.z" // use latest version of the library
@@ -79,7 +98,9 @@ libraryDependencies ++= Seq(
 )
 ```
 
-and then, in your case class definitions
+### Usage
+
+Once configured your project with either option `1` or `2`, all you have to do is the following
 
 ```scala 3
 import io.github.polentino.redacted.redacted
