@@ -1,4 +1,5 @@
 ThisBuild / scalaVersion := "3.1.3"
+ThisBuild / versionScheme := Some("early-semver")
 
 // interesting; bumping scalatest / scalacheck, makes 3.1.x and 3.2.x compilation to fail
 val scalaTestVersion = "3.2.19"
