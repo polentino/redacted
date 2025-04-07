@@ -72,7 +72,7 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 In your `project/plugins.sbt` add the following line
 
 ```scala
-addSbtPlugin("io.github.polentino" % "sbt-redacted" % "1.0.0")
+addSbtPlugin("io.github.polentino" % "sbt-redacted" % "1.1.0")
 ```
 
 and then enable it in your specific (sub)project in `build.sbt` like so
@@ -81,7 +81,7 @@ and then enable it in your specific (sub)project in `build.sbt` like so
 lazy val root = (project in file("."))
   .enablePlugins(RedactedPlugin)
   .setting(
-    redactedVersion := "0.7.1" // optional; the plugin defaults to "0.7.1"
+    redactedVersion := "0.7.1"
   )
 ```
 
@@ -267,7 +267,7 @@ def toString(): String =
 
 ## Improvements
 
-* [ ] create Sbt plugin
+* [x] create Sbt plugin (https://github.com/polentino/sbt-redacted)
 * [ ] add some benchmarks with jmh
 
 ## Credits
