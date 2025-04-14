@@ -1,0 +1,9 @@
+{
+  "label": "Installation",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Quick overview of the installation methods: the recommended method is through sbt-redacted plugin, while the second is kept for historical reasons."
+  }
+}
+
