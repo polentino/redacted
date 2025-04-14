@@ -105,6 +105,15 @@ lazy val redactedTests = (project in file("tests"))
     }
   )
 
+lazy val site = (project in file("redacted-docs"))
+  .enablePlugins(MdocPlugin, DocusaurusPlugin)
+  .settings(name := "redacted-site")
+  .settings(
+    publish / skip := true,
+    moduleName := "redacted-docs",
+    mdocVariables := Map("REDACTED_VERSION" -> version.value)
+  )
+
 addCommandAlias("testAll", "; clean; +test")
 addCommandAlias("fmt", "; scalafix; scalafmtAll; scalafmtSbt")
 addCommandAlias("fmtCheck", "; scalafmtCheckAll ; scalafmtSbtCheck")
