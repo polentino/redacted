@@ -24,4 +24,4 @@ accessible whenever you'll access them :wink:
 Furthermore, redacted compiler plugin will change only case classes that contain _at least_ one field marked with
 `@redacted` annotation, skipping entirely the ones that don't have it.
 
-If you're curious about how the compiler plugin works, feel free to have a look at the [Development guide](/development)
+If you're curious about how the compiler plugin is structured and works, feel free to have a look at the [Development guide](/development)

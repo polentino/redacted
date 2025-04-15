@@ -70,7 +70,7 @@ Looks nicer, right?
 
 ### Quick recap
 
-With the examples above, you saw a few good use cases of how `@redacted` could be used works:
+With the example above, you saw already a few good use cases of how `@redacted` works:
 
 * it works with case classes
 * it works with value classes as well
