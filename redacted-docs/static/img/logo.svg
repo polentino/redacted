@@ -10,6 +10,9 @@
    inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
    sodipodi:docname="logo.svg"
    xml:space="preserve"
+   inkscape:export-filename="docusaurus-social-card.jpg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -373,7 +376,7 @@
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,-0.09997382,18.460306)"
        id="text3"
-       style="font-size:48px;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect5);fill:#666666;stroke-width:0.755906;stroke-linecap:round"><tspan
+       style="font-size:48px;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect5);display:inline;fill:#666666;stroke-width:0.755906;stroke-linecap:round"><tspan
          x="529.51172"
          y="308.18152"
          id="tspan5"><tspan
@@ -402,7 +405,7 @@
      inkscape:label="title"><text
        xml:space="preserve"
        id="text2"
-       style="font-size:192px;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect3);fill:#44aa00;stroke-width:0.755906;stroke-linecap:round"
+       style="font-size:192px;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect3);display:inline;fill:#44aa00;stroke-width:0.755906;stroke-linecap:round"
        transform="matrix(0.26458333,0,0,0.26458333,46.208243,-6.3537951)"><tspan
          x="38.173828"
          y="211.11868"
