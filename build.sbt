@@ -113,7 +113,7 @@ lazy val site = (project in file("redacted-docs"))
     docusaurDir := (ThisBuild / baseDirectory).value / "redacted-docs",
     docusaurBuildDir := docusaurDir.value / "build",
     gitHubPagesOrgName := "polentino",
-    gitHubPagesRepoName := "redacted",
+    gitHubPagesRepoName := "redacted"
   )
 
 addCommandAlias("testAll", "; clean; +test")
