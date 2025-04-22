@@ -19,11 +19,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
 
+      - name: Setup sbt launcher
+        uses: sbt/setup-sbt@v1
       - name: Build and publish website
         run: |
           sbt \
