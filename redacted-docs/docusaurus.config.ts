@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Redacted',
   tagline: 'Scala annotation & compiler plugin to prevent leaking sensitive / PII fields defined inside case class.',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/redacted.ico',
 
   // Set the production url of your site here
   url: 'https://polentino.github.com',
@@ -47,6 +47,11 @@ const config: Config = {
 
   themeConfig: {
     image: 'img/redacted-social-card.jpg',
+    colorMode: {
+      "defaultMode": "dark",
+      "disableSwitch": false,
+      "respectPrefersColorScheme": false
+    },
     navbar: {
       title: 'Redacted',
       logo: {
