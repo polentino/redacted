@@ -1,3 +1,33 @@
+## [0.8.0](https://github.com/polentino/redacted/compare/v0.7.1...v0.8.0) (2025-04-22)
+
+### 📖 Docs
+
+* clarify the LTS meaning, just in case ([4ebae7c](https://github.com/polentino/redacted/commit/4ebae7c1fc8360dc4487181254d7bbe0903fc866))
+* draft of `development` section ([c5b7ea8](https://github.com/polentino/redacted/commit/c5b7ea8b100c0df15ece6a64382f45609c9f3c95))
+* first draft of redacted website ([b025716](https://github.com/polentino/redacted/commit/b025716c61262485879fb7cafaafef78db419751))
+* prepare documentation for upcoming `1.1.0` release ([8b990f0](https://github.com/polentino/redacted/commit/8b990f0fa1097f719d1ed130933befaf31e142f2))
+* small markdown fix ([b220591](https://github.com/polentino/redacted/commit/b220591a609e7a6728101f93d457f4157b20b60d))
+* update instructions to include sbt-redacted setup ([94ff75b](https://github.com/polentino/redacted/commit/94ff75bfc2b8698ee3393d2a229f632a5f148cb7))
+* update ToC ([4159302](https://github.com/polentino/redacted/commit/4159302f1c45aa3b5af907535bdabf6a0c782e46))
+* updated demo gif ([7abaeda](https://github.com/polentino/redacted/commit/7abaedafff060175a31cce37549817d4d54b50c5))
+* updated demo gif ([4d6d0e8](https://github.com/polentino/redacted/commit/4d6d0e8ac4464891b71e1362099dde89a18b193b))
+* updated README.md ([8b3573c](https://github.com/polentino/redacted/commit/8b3573cd3e32f83cd8a311d96ee60d7e77358c4e))
+
+### ✨ Features
+
+* include version scheme ([8fea584](https://github.com/polentino/redacted/commit/8fea58430e46fd75fc2052f8c0ec2e3225e6d484))
+
+### 🩹 Fixes
+
+* added favicon (wip) ([fd782be](https://github.com/polentino/redacted/commit/fd782be7dbe3eb41f237fa373e91ba1b448a67ee))
+* added social card (wip) ([3b4ba72](https://github.com/polentino/redacted/commit/3b4ba7237559e25f9250208b78e5a10e376f686f))
+* fmt ([84a7f82](https://github.com/polentino/redacted/commit/84a7f82d8bc5169b50449a42db0ce6c366ffcd01))
+* publish to GitHub pages (wip) ([754a7ba](https://github.com/polentino/redacted/commit/754a7bab6981e87dd54fb1133fae30bbefb292b5))
+* publish to GitHub pages (wip) ([90399d2](https://github.com/polentino/redacted/commit/90399d2fb162a487b7ed8a7954fb8c3f3f8049af))
+* publish to GitHub pages (wip) ([ec9c4c1](https://github.com/polentino/redacted/commit/ec9c4c152c1e81659a95a22ce2fcd3a54e0aaaeb))
+* small refactorings with logo (wip) ([9b18891](https://github.com/polentino/redacted/commit/9b18891dcf104e751192d907611373675608db3f))
+* smaller svg sizes & CI changes (wip) ([c22cd7d](https://github.com/polentino/redacted/commit/c22cd7d127dc9fad38802907ceb4a3c9c807470d))
+
 ## [0.7.1](https://github.com/polentino/redacted/compare/v0.7.0...v0.7.1) (2025-03-18)
 
 ### 🤖 CI/CD
