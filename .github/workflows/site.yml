@@ -1,0 +1,33 @@
+name: "Build & Publish Website"
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  # TODO ENABLE THIS INSTEAD, ONCE THE SITE PUBLISHING WORKS
+#  push:
+#    branches:
+#      - main
+
+jobs:
+  build_and_publish_website:
+    if: github.ref != 'refs/heads/gh-pages' && github.ref != 'gh-pages'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Build and publish website
+        run: |
+          sbt \
+            site/docusaurInstall \
+            site/docusaurCleanBuild \
+            site/docusaurBuild \
+            site/publishToGitHubPages
