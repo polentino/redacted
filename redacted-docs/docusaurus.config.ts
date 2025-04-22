@@ -17,8 +17,6 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  // organizationName: 'facebook', // Usually your GitHub org/user name. // TODO REMOVE
-  // projectName: 'docusaurus', // Usually your repo name. // TODO REMOVE
   organizationName: 'polentino', // Usually your GitHub org/user name.
   projectName: 'redacted', // Usually your repo name.
 
@@ -48,11 +46,11 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/redacted-social-card.jpg',
     navbar: {
       title: 'Redacted',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Redacted Logo',
         src: 'img/redacted_logo.svg',
       },
       items: [

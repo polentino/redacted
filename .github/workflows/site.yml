@@ -1,12 +1,9 @@
 name: "Build & Publish Website"
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-  # TODO ENABLE THIS INSTEAD, ONCE THE SITE PUBLISHING WORKS
-#  push:
-#    branches:
-#      - main
+  push:
+    branches:
+      - main
 
 jobs:
   build_and_publish_website:
