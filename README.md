@@ -13,14 +13,9 @@
 <!-- TOC -->
 * [Redacted](#redacted)
   * [Introduction](#introduction)
-  * [How to configure and use it](#how-to-configure-and-use-it)
-    * [1. Configure via sbt plugin (preferred)](#1-configure-via-sbt-plugin-preferred)
-    * [2. Configure via manual intervention](#2-configure-via-manual-intervention)
-    * [Usage](#usage)
-    * [Nested case class](#nested-case-class)
-    * [Nested case class with upper level annotation](#nested-case-class-with-upper-level-annotation)
-    * [Value case classes](#value-case-classes)
-    * [Note on curried case classes](#note-on-curried-case-classes)
+    * [A note on this README](#a-note-on-this-readme)
+  * [Configuration](#configuration)
+  * [Usage](#usage)
   * [Supported Scala Versions](#supported-scala-versions)
   * [How it works](#how-it-works)
   * [Improvements](#improvements)
@@ -65,9 +60,13 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 
 `@redacted` to the rescue!
 
-## How to configure and use it
+### A note on this README
 
-### 1. Configure via sbt plugin (preferred)
+This Readme is being intentionally kept short; if you'd like to learn more about advanced usecases of the annotation, or
+how the compiler plugin itself is structured and works, feel free to head over the project's
+website https://polentino.github.io/redacted/ :) 
+
+## Configuration
 
 In your `project/plugins.sbt` add the following line
 
@@ -85,21 +84,7 @@ lazy val root = (project in file("."))
   )
 ```
 
-### 2. Configure via manual intervention
-
-In your `build.sbt` add the following line
-
-```scala 3
-val redactedVersion = "x.y.z" // use latest version of the library
-// resolvers += DefaultMavenRepository
-
-libraryDependencies ++= Seq(
-  "io.github.polentino" %% "redacted" % redactedVersion cross CrossVersion.full,
-  compilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion cross CrossVersion.full)
-)
-```
-
-### Usage
+## Usage
 
 Once configured your project with either option `1` or `2`, all you have to do is the following
 
@@ -145,75 +130,6 @@ println(user.email)
 will still print the real values:
 > $ abcdefghijklmnopqrstuvwxyz   
 > $ polentino911@somemail.com
-
-### Nested case class
-
-It also works with nested case classes:
-
-```scala 3
-case class Wrapper(id: String, user: User)
-
-val wrapper = Wrapper("id-1", user) // user is the same object defined above
-println(wrapper)
-```
-
-will print
-> Wrapper(id-1,User(8b2d4570-d043-473b-a56d-fe98105ccc2b, polentino911, ***))
-
-### Nested case class with upper level annotation
-
-It also works with nested case classes:
-
-```scala 3
-case class Wrapper(id: String, @redacted user: User)
-
-val wrapper = Wrapper("id-1", user) // user is the same object defined above
-println(wrapper)
-```
-
-will print
-> Wrapper(id-1,***)
-
-### Value case classes
-
-`@redacted` plays nicely with value case classes too, i.e.
-
-```scala 3
-case class Password(@redacted value: String) extends AnyVal
-
-val p = Password("somepassword")
-println(p)
-```
-
-will print on console
-
-```scala 3
-Password(***)
-```
-
-### Note on curried case classes
-
-While it is possible to write something like
-
-```scala 3
-case class Curried(id: String, @redacted name: String)(@redacted email: String)
-```
-
-the `toString` method that Scala compiler generates by default will print only the parameters in the primary
-constructor, meaning that
-
-```scala 3
-val c = Curried(0, "Berfu")("berfu@gmail.com")
-println(c)
-```
-
-will display
-
-```scala 3
-Curried(0, Berfu)
-```
-
-Therefore, the same behavior is being kept in the customized `toString` implementation.
 
 ## Supported Scala Versions
 
