@@ -10,19 +10,19 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://polentino.github.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/redacted/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   // organizationName: 'facebook', // Usually your GitHub org/user name. // TODO REMOVE
   // projectName: 'docusaurus', // Usually your repo name. // TODO REMOVE
-  organizationName: 'io.github.polentino', // Usually your GitHub org/user name.
+  organizationName: 'polentino', // Usually your GitHub org/user name.
   projectName: 'redacted', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'log',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
@@ -48,7 +48,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
+    // TODO: Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
       title: 'Redacted',

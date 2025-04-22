@@ -97,8 +97,8 @@ lazy val redactedTests = (project in file("tests"))
       "org.scalatestplus" %% "scalacheck-1-17" % scalaCheckVersion % Test
     ),
     Test / scalacOptions ++= {
-      val jar = (redactedCompilerPlugin / Compile / packageBin).value
       val addScala2Plugin = "-Xplugin-require:redacted-plugin"
+      val jar = (redactedCompilerPlugin / Compile / packageBin).value
       val addScala3Plugin = "-Xplugin:" + jar.getAbsolutePath
       val dummy = "-Jdummy=" + jar.lastModified
       Seq(addScala2Plugin, addScala3Plugin, dummy)
@@ -106,12 +106,14 @@ lazy val redactedTests = (project in file("tests"))
   )
 
 lazy val site = (project in file("redacted-docs"))
-  .enablePlugins(MdocPlugin, DocusaurusPlugin)
-  .settings(name := "redacted-site")
+  .enablePlugins(DocusaurPlugin)
   .settings(
+    name := "redacted-docs",
     publish / skip := true,
-    moduleName := "redacted-docs",
-    mdocVariables := Map("REDACTED_VERSION" -> version.value)
+    docusaurDir := (ThisBuild / baseDirectory).value / "redacted-docs",
+    docusaurBuildDir := docusaurDir.value / "build",
+    gitHubPagesOrgName := "polentino",
+    gitHubPagesRepoName := "redacted",
   )
 
 addCommandAlias("testAll", "; clean; +test")
