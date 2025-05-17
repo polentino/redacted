@@ -139,9 +139,11 @@ ones [specified in the Scala website](https://www.scala-lang.org/download/all.ht
 
 | Scala Version |       LTS ?        |
 |:-------------:|:------------------:|
+|     3.7.0     |         -          |
 |     3.6.4     |         -          |
 |     3.5.2     |         -          |
 |     3.4.3     |         -          |
+|     3.3.6     | :white_check_mark: |
 |     3.3.5     | :white_check_mark: |
 |     3.3.4     | :white_check_mark: |
 |     3.3.3     | :white_check_mark: |
@@ -177,8 +179,7 @@ depending on the presence (or not) of `@redacted`, resulting in an implementatio
 
 ```scala 3
 def toString(): String =
-  "<class name>(" + this.< field not redacted > + "," + "***" +
-...+")"
+  "<class name>(" + this.< field not redacted > + "," + "***" + ... +")"
 ```
 
 ## Improvements
