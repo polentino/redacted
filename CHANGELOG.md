@@ -1,3 +1,18 @@
+## [0.9.0](https://github.com/polentino/redacted/compare/v0.8.0...v0.9.0) (2025-05-17)
+
+### 📖 Docs
+
+* update broken link ([cd9c9b7](https://github.com/polentino/redacted/commit/cd9c9b7c09bfc0ecda874391c94f869af3f481e5))
+* update page title ([740510c](https://github.com/polentino/redacted/commit/740510c1cd86415fe8f1598d7200bc1523e66cc2))
+
+### ✨ Features
+
+* add Scala 3.7.0 and 3.3.6 ([2d735df](https://github.com/polentino/redacted/commit/2d735df6f6a0f881a5e03ef5a61992d92b338224))
+
+### 🎨 Style
+
+* add IntellIJ project icon ([6ce0362](https://github.com/polentino/redacted/commit/6ce036227ff4cc445621f37504c428cd3e75957d))
+
 ## [0.8.0](https://github.com/polentino/redacted/compare/v0.7.1...v0.8.0) (2025-04-22)
 
 ### 📖 Docs
