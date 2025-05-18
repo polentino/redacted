@@ -2,7 +2,7 @@
 
 > Prevents unintentional leakage of sensitive fields defined inside `case class`.
 
-![Simple example of @redacted usage](../img/redacted-example.gif "Sample usage of @redacted")
+![Simple example of @redacted usage](../../../tree/main/demo/redacted-example.gif "Sample usage of @redacted")
 
 
 Scala's `case class`(es) are an incredibly powerful tool to build complex ADTs; on top of that, they provide out of the
