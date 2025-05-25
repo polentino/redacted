@@ -20,6 +20,7 @@
   * [How it works](#how-it-works)
   * [Improvements](#improvements)
   * [Credits](#credits)
+  * [Adopters](#adopters)
 <!-- TOC -->
 
 ## Introduction
@@ -194,3 +195,12 @@ def toString(): String =
     * [Compile-Time Time! — Data Transmogrification Macro From Scratch — Part 2](https://www.youtube.com/watch?v=w7pzqHXGnf8)
 * [Compiler Plugin Development in Scala 3 | Let's talk about Scala 3](https://www.youtube.com/watch?v=oqYd_Lwj2p0)
 * [act](https://github.com/nektos/act)
+
+---
+
+## Adopters
+
+Here below you'll find a list of companies using `redacted` in their product(s)
+
+Want to see your company here? [Fork the repo and submit a PR](https://github.com/polentino/redacted/fork)!
+
