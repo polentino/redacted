@@ -56,7 +56,7 @@ trait RuntimeApi { self =>
 
     maybeNewToStringBody match {
       case Some(newToStringBody) => newToStringBody
-      case None =>
+      case None                  =>
         reporterApi.warning(
           s"""
                |Dang, couldn't patch properly ${treeName(tree)} :(
