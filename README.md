@@ -204,3 +204,4 @@ Here below you'll find a list of companies using `redacted` in their product(s)
 
 Want to see your company here? [Fork the repo and submit a PR](https://github.com/polentino/redacted/fork)!
 
+* [InvestSuite](https://www.investsuite.com) - B2B, Scalable & AI-Driven WealthTech
