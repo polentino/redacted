@@ -11,16 +11,18 @@
 ![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
 <!-- TOC -->
+
 * [Redacted](#redacted)
-  * [Introduction](#introduction)
-    * [A note on this README](#a-note-on-this-readme)
-  * [Configuration](#configuration)
-  * [Usage](#usage)
-  * [Supported Scala Versions](#supported-scala-versions)
-  * [How it works](#how-it-works)
-  * [Improvements](#improvements)
-  * [Credits](#credits)
-  * [Adopters](#adopters)
+    * [Introduction](#introduction)
+        * [A note on this README](#a-note-on-this-readme)
+    * [Configuration](#configuration)
+    * [Usage](#usage)
+    * [Supported Scala Versions](#supported-scala-versions)
+    * [How it works](#how-it-works)
+    * [Improvements](#improvements)
+    * [Credits](#credits)
+    * [Adopters](#adopters)
+
 <!-- TOC -->
 
 ## Introduction
@@ -138,22 +140,22 @@ will still print the real values:
 checkmark ( :white_check_mark: ) since those are the Long Term Support
 ones [specified in the Scala website](https://www.scala-lang.org/download/all.html).
 
-| Scala Version |       LTS ?        |
-|:-------------:|:------------------:|
-|     3.7.0     |         -          |
-|     3.6.4     |         -          |
-|     3.5.2     |         -          |
-|     3.4.3     |         -          |
-|     3.3.6     | :white_check_mark: |
-|     3.3.5     | :white_check_mark: |
-|     3.3.4     | :white_check_mark: |
-|     3.3.3     | :white_check_mark: |
-|     3.3.1     | :white_check_mark: |
-|     3.3.0     | :white_check_mark: |
-|     3.2.2     |         -          |
-|     3.1.3     |         -          |
-|    2.13.16    |         -          |
-|    2.12.20    |         -          |
+| Scala Version | Notes |
+|:-------------:|:-----:|
+|     3.7.0     |   -   |
+|     3.6.4     |   -   |
+|     3.5.2     |   -   |
+|     3.4.3     |   -   |
+|     3.3.6     |  LTS  |
+|     3.3.5     |  LTS  |
+|     3.3.4     |  LTS  |
+|     3.3.3     |  LTS  |
+|     3.3.1     |  LTS  |
+|     3.3.0     |  LTS  |
+|     3.2.2     |   -   |
+|     3.1.3     |   -   |
+|    2.13.16    |   -   |
+|    2.12.20    |   -   |
 
 ## How it works
 
