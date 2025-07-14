@@ -1,3 +1,15 @@
+## [0.9.1](https://github.com/polentino/redacted/compare/v0.9.0...v0.9.1) (2025-07-14)
+
+### 📖 Docs
+
+* added Adopters section ([f7fabd7](https://github.com/polentino/redacted/commit/f7fabd706c1aaa9013b28b00757301d77c89d648))
+* less confusing supported versions table ([1e6391b](https://github.com/polentino/redacted/commit/1e6391bca0fb38006e5e8f5992629c564ff166fc))
+* update demo gif to redacted 0.9.0 and Scala 3.7.0 ([6eef86b](https://github.com/polentino/redacted/commit/6eef86b3ba7094e4eae5ea0f32326d426eca6779))
+
+### 🩹 Fixes
+
+* add support for Scala 3.7.1 ([04f9810](https://github.com/polentino/redacted/commit/04f981079f522e3b90111cb84811ad1c3da67ffe))
+
 ## [0.9.0](https://github.com/polentino/redacted/compare/v0.8.0...v0.9.0) (2025-05-17)
 
 ### 📖 Docs
