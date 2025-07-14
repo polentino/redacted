@@ -142,6 +142,7 @@ ones [specified in the Scala website](https://www.scala-lang.org/download/all.ht
 
 | Scala Version | Notes |
 |:-------------:|:-----:|
+|     3.7.1     |   -   |
 |     3.7.0     |   -   |
 |     3.6.4     |   -   |
 |     3.5.2     |   -   |
