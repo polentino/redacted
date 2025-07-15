@@ -136,9 +136,8 @@ will still print the real values:
 
 ## Supported Scala Versions
 
-`redacted` supports all Scala versions listed in the table below. However, it is advised to use the ones with a green
-checkmark ( :white_check_mark: ) since those are the Long Term Support
-ones [specified in the Scala website](https://www.scala-lang.org/download/all.html).
+`redacted` supports all Scala versions listed in the table below. However, it is advised to use the Long Term Support
+ones (as listed from  [the Scala website](https://www.scala-lang.org/download/all.html)).
 
 | Scala Version | Notes |
 |:-------------:|:-----:|
