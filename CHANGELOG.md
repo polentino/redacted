@@ -1,3 +1,18 @@
+## [0.9.2](https://github.com/polentino/redacted/compare/v0.9.1...v0.9.2) (2025-07-20)
+
+### 🏗️ Build
+
+* use plain sbt to publish to Sonatype ([c85a30b](https://github.com/polentino/redacted/commit/c85a30bbe0ea569fefbc38a0a63e47c050adb793))
+
+### 📖 Docs
+
+* grammar++ ([e5c626f](https://github.com/polentino/redacted/commit/e5c626fb7505b0124b10991ec0e999027fa77fde))
+* small README.md update ([1ddd4f0](https://github.com/polentino/redacted/commit/1ddd4f01e078ed0be9286822d5cf3b8a79af8aaa))
+
+### 🩹 Fixes
+
+* address vulnerabilities in jackson-core (High & Moderate) ([5c19527](https://github.com/polentino/redacted/commit/5c19527742c58e544dd4637709d22434c3d772a4))
+
 ## [0.9.1](https://github.com/polentino/redacted/compare/v0.9.0...v0.9.1) (2025-07-14)
 
 ### 📖 Docs
