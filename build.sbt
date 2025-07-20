@@ -63,8 +63,8 @@ val scalafixSettings = Seq(
 )
 
 val dependenciesOverride = Seq(
-  "com.google.protobuf" % "protobuf-java" % protobufJavaVersion,
-  "com.fasterxml.jackson.core" % "jackson-core" % jacksonCoreVersion
+  "com.google.protobuf"        % "protobuf-java" % protobufJavaVersion,
+  "com.fasterxml.jackson.core" % "jackson-core"  % jacksonCoreVersion
 )
 
 val crossCompileSettings = scalafixSettings ++ Seq(
