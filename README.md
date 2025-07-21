@@ -83,13 +83,13 @@ and then enable it in your specific (sub)project in `build.sbt` like so
 lazy val root = (project in file("."))
   .enablePlugins(RedactedPlugin)
   .setting(
-    redactedVersion := "0.7.1"
+    redactedVersion := "0.9.2"
   )
 ```
 
 ## Usage
 
-Once configured your project with either option `1` or `2`, all you have to do is the following
+Once configured your project, all you have to do is the following
 
 ```scala 3
 import io.github.polentino.redacted.redacted
