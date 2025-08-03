@@ -1,3 +1,20 @@
+## [0.9.3](https://github.com/polentino/redacted/compare/v0.9.2...v0.9.3) (2025-08-03)
+
+### 🤖 CI/CD
+
+* point to redacted homepage instead of its repo ([6bfe591](https://github.com/polentino/redacted/commit/6bfe5910a269da770f7be6ddce3352e8fb903a9b))
+
+### 📖 Docs
+
+* clicking on the tags badge redirects to the releases page ([e024d84](https://github.com/polentino/redacted/commit/e024d84ebfcec4f73081025aca3a4a5fd8616560))
+* update badges ([54c41e6](https://github.com/polentino/redacted/commit/54c41e62c727547fb106e4b30254f5ee45220795))
+* updated readme ([740aa67](https://github.com/polentino/redacted/commit/740aa67095f26b177615bf694a3517cfd8de08ce))
+* workaround for shields.io redirect ([8c0e7a3](https://github.com/polentino/redacted/commit/8c0e7a38da466c82de9b6c1e7122a9fc53aa6702))
+
+### 🩹 Fixes
+
+* support scala 3.7.2 ([d2b4623](https://github.com/polentino/redacted/commit/d2b46238a77fa1372167663b930779a3f2152b4a))
+
 ## [0.9.2](https://github.com/polentino/redacted/compare/v0.9.1...v0.9.2) (2025-07-20)
 
 ### 🏗️ Build
