@@ -15,7 +15,7 @@ ThisBuild / developers := List(
 
 ThisBuild / description := "Scala library and compiler plugin that prevent inadvertent leakage of sensitive fields in `case classes` (such as credentials, personal data, and other confidential information)."
 ThisBuild / licenses := List("WTFPL" -> url("http://www.wtfpl.net/"))
-ThisBuild / homepage := Some(url("https://github.com/polentino/redacted"))
+ThisBuild / homepage := Some(url("https://polentino.github.io/redacted/"))
 
 ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / publishMavenStyle := true
