@@ -1,3 +1,13 @@
+## [0.9.4](https://github.com/polentino/redacted/compare/v0.9.3...v0.9.4) (2025-09-12)
+
+### 📖 Docs
+
+* update supported Scala version table ([5e558ca](https://github.com/polentino/redacted/commit/5e558ca9ff5652f8847e3c4fa00faaa4c6a13a2d))
+
+### 🩹 Fixes
+
+* update to Scala 3.7.3 ([9535593](https://github.com/polentino/redacted/commit/953559337684dc6567cfdc5cc5e9bc0510a4dc57))
+
 ## [0.9.3](https://github.com/polentino/redacted/compare/v0.9.2...v0.9.3) (2025-08-03)
 
 ### 🤖 CI/CD
