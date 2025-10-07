@@ -1,4 +1,4 @@
-//> using scala 2.13.16
+//> using scala 2.13.17
 //> using dep io.github.polentino:::redacted:0.9.4
 //> using plugin io.github.polentino:::redacted-plugin:0.9.4
 
