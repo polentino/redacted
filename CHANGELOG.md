@@ -1,3 +1,9 @@
+## [0.9.5](https://github.com/polentino/redacted/compare/v0.9.4...v0.9.5) (2025-10-10)
+
+### 🩹 Fixes
+
+* update to support Scala 2.13.17 ([81b84a4](https://github.com/polentino/redacted/commit/81b84a4a6ff217ab6c32d5c68c06444da2a9641c))
+
 ## [0.9.4](https://github.com/polentino/redacted/compare/v0.9.3...v0.9.4) (2025-09-12)
 
 ### 📖 Docs
