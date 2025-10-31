@@ -7,7 +7,7 @@ val scalaCheckVersion = "3.2.17.0"
 
 // versions overrides needed to address vulnerabilities
 val protobufJavaVersion = "4.33.0"
-val jacksonCoreVersion = "2.20.0"
+val jacksonCoreVersion = "2.20.1"
 
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
