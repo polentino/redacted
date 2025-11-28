@@ -12,7 +12,7 @@ val jacksonCoreVersion = "2.20.1"
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
   "2.12.20",
-  "2.13.17",
+  "2.13.18",
   "3.1.3",
   "3.2.2",
   "3.3.0",
