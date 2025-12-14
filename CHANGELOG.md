@@ -1,3 +1,9 @@
+## [0.9.8](https://github.com/polentino/redacted/compare/v0.9.7...v0.9.8) (2025-12-14)
+
+### 🩹 Fixes
+
+* add support for Scala 2.12.21 ([66befde](https://github.com/polentino/redacted/commit/66befde99ef963bed4f447f2656264901f1ab382))
+
 ## [0.9.7](https://github.com/polentino/redacted/compare/v0.9.6...v0.9.7) (2025-11-28)
 
 ### 🩹 Fixes
