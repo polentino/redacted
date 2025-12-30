@@ -1,3 +1,13 @@
+## [0.9.9](https://github.com/polentino/redacted/compare/v0.9.8...v0.9.9) (2025-12-30)
+
+### 📖 Docs
+
+* include new LTS version in the table ([93cafe4](https://github.com/polentino/redacted/commit/93cafe486c6e077a2d47e15fc16ae560d73dcf10))
+
+### 🩹 Fixes
+
+* add support for Scala 3.3.7 ([59e51d3](https://github.com/polentino/redacted/commit/59e51d3f88423360cc2a661d3525971e133c8e7d))
+
 ## [0.9.8](https://github.com/polentino/redacted/compare/v0.9.7...v0.9.8) (2025-12-14)
 
 ### 🩹 Fixes
