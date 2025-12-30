@@ -147,6 +147,7 @@ ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.h
 |     3.6.4     |   -   |
 |     3.5.2     |   -   |
 |     3.4.3     |   -   |
+|     3.3.7     |  LTS  |
 |     3.3.6     |  LTS  |
 |     3.3.5     |  LTS  |
 |     3.3.4     |  LTS  |
