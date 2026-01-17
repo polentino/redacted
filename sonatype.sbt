@@ -13,7 +13,8 @@ ThisBuild / developers := List(
   Developer("polentino", "Diego Casella", "polentino911@gmail.com", url("https://linkedin.com/in/diegocasella"))
 )
 
-ThisBuild / description := "Scala library and compiler plugin that prevent inadvertent leakage of sensitive fields in `case classes` (such as credentials, personal data, and other confidential information)."
+ThisBuild / description :=
+  "Scala library and compiler plugin that prevent inadvertent leakage of sensitive fields in `case classes` (such as credentials, personal data, and other confidential information)."
 ThisBuild / licenses := List("WTFPL" -> url("http://www.wtfpl.net/"))
 ThisBuild / homepage := Some(url("https://polentino.github.io/redacted/"))
 

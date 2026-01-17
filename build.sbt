@@ -83,11 +83,12 @@ lazy val redactedCompilerPlugin = (project in file("plugin"))
   .settings(name := "redacted-plugin")
   .settings(
     crossCompileSettings,
-    libraryDependencies += (CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((3, _)) => "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
-      case Some((2, _)) => "org.scala-lang"  % "scala-compiler"  % scalaVersion.value
-      case v            => throw new Exception(s"Scala version $v not recognised")
-    })
+    libraryDependencies +=
+      (CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
+        case Some((2, _)) => "org.scala-lang"  % "scala-compiler"  % scalaVersion.value
+        case v            => throw new Exception(s"Scala version $v not recognised")
+      })
   )
 
 lazy val redactedTests = (project in file("tests"))
