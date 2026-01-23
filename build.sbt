@@ -25,7 +25,8 @@ val supportedScalaVersions = List(
   "3.4.3",
   "3.5.2",
   "3.6.4",
-  "3.7.4"
+  "3.7.4",
+  "3.8.1"
 )
 
 inThisBuild(
