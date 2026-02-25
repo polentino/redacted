@@ -143,6 +143,7 @@ ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.h
 
 | Scala Version | Notes |
 |:-------------:|:-----:|
+|     3.8.2     |   -   |
 |     3.7.4     |   -   |
 |     3.6.4     |   -   |
 |     3.5.2     |   -   |
