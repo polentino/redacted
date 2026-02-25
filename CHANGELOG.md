@@ -1,3 +1,13 @@
+## [0.9.11](https://github.com/polentino/redacted/compare/v0.9.10...v0.9.11) (2026-02-25)
+
+### 📖 Docs
+
+* fix site generation ([e5dd892](https://github.com/polentino/redacted/commit/e5dd892b9a6bd8ea4219572d29f111f77c8b16d8))
+
+### 🩹 Fixes
+
+* add support for Scala 3.8.2 ([57fd9ae](https://github.com/polentino/redacted/commit/57fd9aec28f945adf326eef26f3add8d6b9b14e9))
+
 ## [0.9.10](https://github.com/polentino/redacted/compare/v0.9.9...v0.9.10) (2026-01-24)
 
 ### 🩹 Fixes
