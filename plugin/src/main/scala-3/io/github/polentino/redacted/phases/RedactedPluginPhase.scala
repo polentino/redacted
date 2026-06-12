@@ -4,13 +4,15 @@ import dotty.tools.dotc.ast.tpd
 import dotty.tools.dotc.core.Contexts.*
 import dotty.tools.dotc.plugins.PluginPhase
 import dotty.tools.dotc.transform.Pickler
+import dotty.tools.dotc.typer.TyperPhase
 
 import io.github.polentino.redacted.api.RedactedApi
 import io.github.polentino.redacted.runtime.Scala3Runtime
 
 final case class RedactedPluginPhase() extends PluginPhase {
 
-  override val runsAfter: Set[String] = Set(Pickler.name)
+  override val runsAfter: Set[String] = Set(TyperPhase.name)
+  override val runsBefore: Set[String] = Set(Pickler.name)
 
   override def phaseName: String = RedactedPluginPhase.name
 
