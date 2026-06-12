@@ -4,10 +4,18 @@ ThisBuild / versionScheme := Some("early-semver")
 // interesting; bumping scalatest / scalacheck, makes 3.1.x and 3.2.x compilation to fail
 val scalaTestVersion = "3.2.20"
 val scalaCheckVersion = "3.2.17.0"
+val scalaCheckNativeVersion = "3.2.19.0"
 
 // versions overrides needed to address vulnerabilities
 val protobufJavaVersion = "4.35.0"
 val jacksonCoreVersion = "2.22.0"
+
+// subset of versions used for Scala.js / Scala Native (supported by both toolchains)
+val platformScalaVersions = List(
+  "2.13.18",
+  "3.3.7",
+  "3.7.4"
+)
 
 // all LTS versions & latest minor ones
 val supportedScalaVersions = List(
@@ -56,7 +64,15 @@ lazy val root = (project in file("."))
     test / skip := true,
     publish / skip := true
   )
-  .aggregate(redactedLibrary, redactedCompilerPlugin, redactedTests)
+  .aggregate(
+    redactedLibrary.jvm,
+    redactedLibrary.js,
+    redactedLibrary.native,
+    redactedCompilerPlugin,
+    redactedTests.jvm,
+    redactedTests.js,
+    redactedTests.native
+  )
 
 val scalafixSettings = Seq(
   semanticdbEnabled := true,
@@ -76,9 +92,21 @@ val crossCompileSettings = scalafixSettings ++ Seq(
   dependencyOverrides ++= dependenciesOverride
 )
 
-lazy val redactedLibrary = (project in file("library"))
+def redactedPluginScalacOptions = Def.task {
+  val addScala2Plugin = "-Xplugin-require:redacted-plugin"
+  val jar = (redactedCompilerPlugin / Compile / packageBin).value
+  val addScala3Plugin = "-Xplugin:" + jar.getAbsolutePath
+  val dummy = "-Jdummy=" + jar.lastModified
+  Seq(addScala2Plugin, addScala3Plugin, dummy)
+}
+
+lazy val redactedLibrary = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+  .crossType(CrossType.Pure)
+  .in(file("library"))
   .settings(name := "redacted")
   .settings(crossCompileSettings)
+  .jsSettings(crossScalaVersions := platformScalaVersions)
+  .nativeSettings(crossScalaVersions := platformScalaVersions)
 
 lazy val redactedCompilerPlugin = (project in file("plugin"))
   .settings(name := "redacted-plugin")
@@ -92,24 +120,28 @@ lazy val redactedCompilerPlugin = (project in file("plugin"))
       })
   )
 
-lazy val redactedTests = (project in file("tests"))
+lazy val redactedTests = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+  .crossType(CrossType.Pure)
+  .in(file("tests"))
   .dependsOn(redactedLibrary)
   .settings(name := "redacted-tests")
   .settings(scalafixSettings)
   .settings(
     publish / skip := true,
     crossScalaVersions := supportedScalaVersions,
-    libraryDependencies ++= Seq(
-      "org.scalatest"     %% "scalatest"       % scalaTestVersion  % Test,
-      "org.scalatestplus" %% "scalacheck-1-17" % scalaCheckVersion % Test
-    ),
-    Test / scalacOptions ++= {
-      val addScala2Plugin = "-Xplugin-require:redacted-plugin"
-      val jar = (redactedCompilerPlugin / Compile / packageBin).value
-      val addScala3Plugin = "-Xplugin:" + jar.getAbsolutePath
-      val dummy = "-Jdummy=" + jar.lastModified
-      Seq(addScala2Plugin, addScala3Plugin, dummy)
-    }
+    libraryDependencies += "org.scalatest" %%% "scalatest" % scalaTestVersion % Test,
+    Test / scalacOptions ++= redactedPluginScalacOptions.value
+  )
+  .jvmSettings(
+    libraryDependencies += "org.scalatestplus" %%% "scalacheck-1-17" % scalaCheckVersion % Test
+  )
+  .jsSettings(
+    crossScalaVersions := platformScalaVersions,
+    libraryDependencies += "org.scalatestplus" %%% "scalacheck-1-18" % scalaCheckNativeVersion % Test
+  )
+  .nativeSettings(
+    crossScalaVersions := platformScalaVersions,
+    libraryDependencies += "org.scalatestplus" %%% "scalacheck-1-18" % scalaCheckNativeVersion % Test
   )
 
 lazy val site = (project in file("redacted-docs"))
