@@ -10,7 +10,7 @@ const config: Config = {
   favicon: 'img/redacted.ico',
 
   // Set the production url of your site here
-  url: 'https://polentino.github.com',
+  url: 'https://polentino.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/redacted/',
