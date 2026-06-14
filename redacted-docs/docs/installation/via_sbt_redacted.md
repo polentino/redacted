@@ -24,12 +24,17 @@ subproject you'd like to use `@redacted`, and set the version of the library you
 lazy val root = (project in file("."))
   .enablePlugins(RedactedPlugin)
   .setting(
-    redactedVersion := "0.7.1",
+    redactedVersion := "0.9.13",
     // ... // your usual settings here
   )
 ```
 
 That's it! All you have to now is ...
+
+:::info
+`sbt-redacted` supports **Scala.js** and **Scala Native** out of the box: if your project (or subproject) is a
+cross-project, the plugin will automatically handle the platform-specific dependencies for you.
+:::
 
 
 ### 3. Use `@redacted` in your project !

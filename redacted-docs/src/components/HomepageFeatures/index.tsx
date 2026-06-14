@@ -31,12 +31,12 @@ const FeatureList: FeatureItem[] = [
         ),
     },
     {
-        title: 'Scala 3.x and 2.x Compatible!',
+        title: 'Cross-Platform Support',
         Svg: require('@site/static/img/redacted_logo_no_bg_scala.svg').default,
         description: (
             <>
-                <code>@redacted</code> supports a wide range of Scala <code>3.x</code> versions (LTS & every highest
-                version) as well as latest Scala <code>2.13.x</code> and <code>2.12.x</code> versions.
+                <code>@redacted</code> works seamlessly across <b>JVM</b>, <b>Scala.js</b>, and <b>Scala Native</b>,
+                supporting both Scala <code>3.x</code> and <code>2.x</code>.
             </>
         ),
     },

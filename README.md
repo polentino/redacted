@@ -85,7 +85,7 @@ and then enable it in your specific (sub)project in `build.sbt` like so
 lazy val root = (project in file("."))
   .enablePlugins(RedactedPlugin)
   .setting(
-    redactedVersion := "0.9.2"
+    redactedVersion := "0.9.13"
   )
 ```
 
