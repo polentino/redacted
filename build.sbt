@@ -123,7 +123,8 @@ lazy val redactedCompilerPlugin = (project in file("plugin"))
   .settings(name := "redacted-plugin")
   .settings(
     compilerPluginSettings,
-    crossTarget := target.value / s"scala-${scalaVersion.value}", // workaround for https://github.com/sbt/sbt/issues/5097
+    crossTarget :=
+      target.value / s"scala-${scalaVersion.value}", // workaround for https://github.com/sbt/sbt/issues/5097
     crossVersion := CrossVersion.full,
     libraryDependencies +=
       (CrossVersion.partialVersion(scalaVersion.value) match {
