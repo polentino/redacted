@@ -1,13 +1,59 @@
+ThisBuild / scalaVersion := "3.1.3"
+ThisBuild / versionScheme := Some("early-semver")
 
-developers := List(
-  Developer(
-    "polentino",
-    "Diego Casella",
-    "polentino911@gmail.com",
-    url("https://linkedin.com/in/diegocasella")
+// interesting; bumping scalatest / scalacheck, makes 3.1.x and 3.2.x compilation to fail
+val scalaTestVersion = "3.2.20"
+val scalaCheckVersion = "3.2.17.0"
+val scalaCheckNativeVersion = "3.2.19.0"
+
+// versions overrides needed to address vulnerabilities
+val protobufJavaVersion = "4.35.1"
+val jacksonCoreVersion = "2.22.0"
+
+// subset of versions used for Scala.js / Scala Native (supported by both toolchains)
+val platformScalaVersions = List(
+  "2.13.18",
+  "3.3.7",
+  "3.7.4"
+)
+
+// all LTS versions & latest minor ones
+val supportedScalaVersions = List(
+  "2.12.21",
+  "2.13.18",
+  "3.1.3",
+  "3.2.2",
+  "3.3.0",
+  "3.3.1",
+  "3.3.3",
+  "3.3.4",
+  "3.3.5",
+  "3.3.6",
+  "3.3.7",
+  "3.3.8",
+  "3.4.3",
+  "3.5.2",
+  "3.6.4",
+  "3.7.4",
+  "3.8.4"
+)
+
+inThisBuild(
+  List(
+    organization := "io.github.polentino",
+    homepage := Some(url("https://github.com/polentino/redacted")),
+    licenses := List(
+      "WTFPL" -> url("http://www.wtfpl.net/")
+    ),
+    developers := List(
+      Developer(
+        "polentino",
+        "Diego Casella",
+        "polentino911@gmail.com",
+        url("https://linkedin.com/in/diegocasella")
+      )
+    )
   )
-)
-)
 )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
