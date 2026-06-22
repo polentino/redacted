@@ -1,6 +1,7 @@
 //> using scala 3.7.3
-//> using dep io.github.polentino:::redacted:0.10.0
-//> using plugin io.github.polentino:::redacted-plugin:0.10.0
+//> using platform native
+//> using dep io.github.polentino:::redacted:0.9.13
+//> using plugin io.github.polentino:::redacted-plugin:0.9.13
 
 import io.github.polentino.redacted._
 import io.github.polentino.redacted.{redacted => obfuscated} // that works too, should you need an alias

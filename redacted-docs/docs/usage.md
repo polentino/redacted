@@ -6,7 +6,9 @@ sidebar_position: 2
 ## Basic Usage
 
 Once you enabled your SBT (sub)project(s) via sbt-plugin (or by manually adding the dependencies), usage of `@redacted`
-is really straightforward. Assume the (purely educational) scenario where you would like to secure your own
+is really straightforward and identical across **JVM**, **Scala.js**, and **Scala Native**.
+
+Assume the (purely educational) scenario where you would like to secure your own
 implementation for HTTP headers, you could do something like this
 
 ```scala title="com/organization/project/HttpHeaders.scala"

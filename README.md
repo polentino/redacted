@@ -69,7 +69,7 @@ it be better if you were simply to say "when I dump **the whole object**, I don'
 
 This Readme is being intentionally kept short; if you'd like to learn more about advanced usecases of the annotation, or
 how the compiler plugin itself is structured and works, feel free to head over the project's
-website https://polentino.github.io/redacted/ :) 
+website https://polentino.github.io/redacted/ :)
 
 ## Configuration
 
@@ -85,7 +85,7 @@ and then enable it in your specific (sub)project in `build.sbt` like so
 lazy val root = (project in file("."))
   .enablePlugins(RedactedPlugin)
   .setting(
-    redactedVersion := "0.9.2"
+    redactedVersion := "0.9.13"
   )
 ```
 
@@ -141,24 +141,37 @@ will still print the real values:
 `redacted` supports all Scala versions listed in the table below. However, it is advised to use the Long Term Support
 ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.html)).
 
-| Scala Version | Notes |
-|:-------------:|:-----:|
-|     3.8.4     |   -   |
-|     3.7.4     |   -   |
-|     3.6.4     |   -   |
-|     3.5.2     |   -   |
-|     3.4.3     |   -   |
-|     3.3.7     |  LTS  |
-|     3.3.6     |  LTS  |
-|     3.3.5     |  LTS  |
-|     3.3.4     |  LTS  |
-|     3.3.3     |  LTS  |
-|     3.3.1     |  LTS  |
-|     3.3.0     |  LTS  |
-|     3.2.2     |   -   |
-|     3.1.3     |   -   |
-|    2.13.18    |   -   |
-|    2.12.21    |   -   |
+| Scala Version |        JVM         |       Native       |         JS         | Notes |
+|:-------------:|:------------------:|:------------------:|:------------------:|:-----:|
+|     3.8.4     | :white_check_mark: |         -          |         -          |   -   |
+|     3.7.4     | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
+|     3.6.4     | :white_check_mark: |         -          |         -          |   -   |
+|     3.5.2     | :white_check_mark: |         -          |         -          |   -   |
+|     3.4.3     | :white_check_mark: |         -          |         -          |   -   |
+|     3.3.8     | :white_check_mark: |         -          |         -          |   -   |
+|     3.3.7     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
+|     3.3.6     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.5     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.4     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.3     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.1     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.0     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.2.2     | :white_check_mark: |         -          |         -          |   -   |
+|     3.1.3     | :white_check_mark: |         -          |         -          |   -   |
+|    2.13.18    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
+|    2.12.21    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
+
+## Platforms
+
+`redacted` runs on the JVM, [Scala.js](https://www.scala-js.org/) and [Scala Native](https://scala-native.org/). The
+compiler plugin only rewrites `toString` at compile time and is never shipped in the final binary, so it stays
+JVM-only; the `@redacted` annotation library is cross-published. In JS/Native projects depend on the library with
+`%%%` and keep the plugin on `%%`:
+
+```scala
+libraryDependencies += "io.github.polentino" %%% "redacted" % redactedVersion cross CrossVersion.full
+addCompilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion cross CrossVersion.full)
+```
 
 ## How it works
 

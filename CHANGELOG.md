@@ -1,3 +1,9 @@
+## [0.10.0](https://github.com/polentino/redacted/compare/v0.9.13...v0.10.0) (2026-06-22)
+
+### ✨ Features
+
+* scala js / scala native support ([#163](https://github.com/polentino/redacted/issues/163)) ([cc49824](https://github.com/polentino/redacted/commit/cc498246ac0c36c6b27880ff8505cd6a4a67fbc3))
+
 ## [0.9.13](https://github.com/polentino/redacted/compare/v0.9.12...v0.9.13) (2026-06-11)
 
 ### 🩹 Fixes

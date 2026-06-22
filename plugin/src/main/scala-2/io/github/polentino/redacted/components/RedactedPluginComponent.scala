@@ -11,7 +11,8 @@ class RedactedPluginComponent(val global: Global) extends PluginComponent with T
 
   override val phaseName: String = "patch-tostring-component"
 
-  override val runsAfter: List[String] = List("parser")
+  override val runsAfter: List[String] = List("typer")
+  override val runsBefore: List[String] = List("pickler")
 
   import global._
   val runtimeApi: Scala2Runtime[global.type] = Scala2Runtime.create(global)

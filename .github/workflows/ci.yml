@@ -61,6 +61,15 @@ jobs:
           distribution: 'temurin'
       - name: Setup sbt launcher
         uses: sbt/setup-sbt@v1
+        with:
+          sbt-runner-version: 1.12.12
+          disk-cache: false
+      - name: Setup Node.js (Scala.js tests)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Install Scala Native toolchain
+        run: sudo apt-get update && sudo apt-get install -y clang
       - name: Check formatting & Run Tests
         run: sbt fmtCheck testAll
         # Optional: This step uploads information to the GitHub dependency graph and unblocking Dependabot alerts for the repository

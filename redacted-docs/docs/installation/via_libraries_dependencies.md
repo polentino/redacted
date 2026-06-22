@@ -23,6 +23,21 @@ libraryDependencies ++= Seq(
 )
 ```
 
+## Scala.js and Scala Native
+
+`redacted` is published for the JVM, Scala.js and Scala Native. The annotation library is cross-published, so use
+`%%%` to let sbt pick the right platform artifact; the compiler plugin always stays JVM-only (it runs inside the
+compiler and is never shipped in the final binary), so keep depending on it with `%%`:
+
+```scala title="build.sbt"
+lazy val redactedVersion = "x.y.z" // use latest version of the library
+
+libraryDependencies ++= Seq(
+  "io.github.polentino" %%% "redacted" % redactedVersion cross CrossVersion.full,
+  compilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion cross CrossVersion.full)
+)
+```
+
 Once done that, just import the annotation in your `.scala` file, and use it like so
 
 ```scala title="src/main/com/your/project/YourClass.scala"
