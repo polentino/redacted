@@ -63,6 +63,7 @@ jobs:
         uses: sbt/setup-sbt@v1
         with:
           sbt-runner-version: 1.12.11
+          disk-cache: false
       - name: Setup Node.js (Scala.js tests)
         uses: actions/setup-node@v4
         with:

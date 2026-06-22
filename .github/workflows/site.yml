@@ -30,6 +30,7 @@ jobs:
         uses: sbt/setup-sbt@v1
         with:
           sbt-runner-version: 1.12.11
+          disk-cache: false
       - name: Build and publish website
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
