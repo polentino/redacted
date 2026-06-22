@@ -12,6 +12,7 @@ val jacksonCoreVersion = "2.22.0"
 
 // subset of versions used for Scala.js / Scala Native (supported by both toolchains)
 val platformScalaVersions = List(
+  "2.12.21",
   "2.13.18",
   "3.3.7",
   "3.7.4"

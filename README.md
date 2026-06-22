@@ -159,7 +159,7 @@ ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.h
 |     3.2.2     | :white_check_mark: |         -          |         -          |   -   |
 |     3.1.3     | :white_check_mark: |         -          |         -          |   -   |
 |    2.13.18    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
-|    2.12.21    | :white_check_mark: |         -          |         -          |   -   |
+|    2.12.21    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
 
 ## Platforms
 
