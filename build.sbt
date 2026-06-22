@@ -10,16 +10,8 @@ val scalaCheckNativeVersion = "3.2.19.0"
 val protobufJavaVersion = "4.35.1"
 val jacksonCoreVersion = "2.22.0"
 
-// subset of versions used for Scala.js / Scala Native (supported by both toolchains)
-val platformScalaVersions = List(
-  "2.12.21",
-  "2.13.18",
-  "3.3.7",
-  "3.7.4"
-)
-
-// all LTS versions & latest minor ones
-val supportedScalaVersions = List(
+// Scala versions for the compiler plugin
+val compilerPluginScalaVersions = List(
   "2.12.21",
   "2.13.18",
   "3.1.3",
@@ -37,6 +29,20 @@ val supportedScalaVersions = List(
   "3.6.4",
   "3.7.4",
   "3.8.4"
+)
+
+// Scala versions used for Scala.js / Scala Native (supported by both toolchains)
+val platformScalaVersions = List(
+  "2.12.21",
+  "2.13.18",
+  "3.3.0"
+)
+
+// Scala versions for the annotation library. TODO: perhaps merge with `platformScalaVersions`
+val libraryScalaVersions = List(
+  "2.12.21",
+  "2.13.18",
+  "3.3.0"
 )
 
 inThisBuild(
@@ -86,11 +92,15 @@ val dependenciesOverride = Seq(
   "com.fasterxml.jackson.core" % "jackson-core"  % jacksonCoreVersion
 )
 
-val crossCompileSettings = scalafixSettings ++ Seq(
+val compilerPluginSettings = scalafixSettings ++ Seq(
   Test / skip := true,
-  crossTarget := target.value / s"scala-${scalaVersion.value}", // workaround for https://github.com/sbt/sbt/issues/5097
-  crossVersion := CrossVersion.full,
-  crossScalaVersions := supportedScalaVersions,
+  crossScalaVersions := compilerPluginScalaVersions,
+  dependencyOverrides ++= dependenciesOverride
+)
+
+val librarySettings = scalafixSettings ++ Seq(
+  Test / skip := true,
+  crossScalaVersions := libraryScalaVersions,
   dependencyOverrides ++= dependenciesOverride
 )
 
@@ -106,14 +116,16 @@ lazy val redactedLibrary = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(file("library"))
   .settings(name := "redacted")
-  .settings(crossCompileSettings)
+  .settings(librarySettings)
   .jsSettings(crossScalaVersions := platformScalaVersions)
   .nativeSettings(crossScalaVersions := platformScalaVersions)
 
 lazy val redactedCompilerPlugin = (project in file("plugin"))
   .settings(name := "redacted-plugin")
   .settings(
-    crossCompileSettings,
+    compilerPluginSettings,
+    crossTarget := target.value / s"scala-${scalaVersion.value}", // workaround for https://github.com/sbt/sbt/issues/5097
+    crossVersion := CrossVersion.full,
     libraryDependencies +=
       (CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((3, _)) => "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
@@ -130,7 +142,7 @@ lazy val redactedTests = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .settings(scalafixSettings)
   .settings(
     publish / skip := true,
-    crossScalaVersions := supportedScalaVersions,
+    crossScalaVersions := compilerPluginScalaVersions,
     libraryDependencies += "org.scalatest" %%% "scalatest" % scalaTestVersion % Test,
     Test / scalacOptions ++= redactedPluginScalacOptions.value
   )
