@@ -7,7 +7,7 @@ val scalaCheckVersion = "3.2.17.0"
 val scalaCheckNativeVersion = "3.2.20.0"
 
 // versions overrides needed to address vulnerabilities
-val protobufJavaVersion = "4.35.1"
+val protobufJavaVersion = "4.36.0"
 val jacksonCoreVersion = "2.22.2"
 
 // Scala versions for the compiler plugin
