@@ -50,35 +50,40 @@ object Main {
 
       if (path == "/helloworld" && req.method == "POST") {
         var body = ""
-        req.on("data", (chunk: js.Any) => {
-          body += chunk.toString()
-        })
+        req.on(
+          "data",
+          (chunk: js.Any) => {
+            body += chunk.toString()
+          })
 
-        req.on("end", () => {
-          val parsed = js.JSON.parse(body).asInstanceOf[js.Dynamic]
+        req.on(
+          "end",
+          () => {
+            val parsed = js.JSON.parse(body).asInstanceOf[js.Dynamic]
 
-          val userResponse = for {
-            name <- if (!js.isUndefined(parsed.name)) Option(parsed.name).map(_.toString) else None
-            age <- if (!js.isUndefined(parsed.age)) Option(parsed.age).map(_.toString).flatMap(_.toIntOption) else None
-            email <- if (!js.isUndefined(parsed.email)) Option(parsed.email).map(_.toString) else None
-            user = User(name, age, email)
-          } yield
-            s"""
+            val userResponse = for {
+              name <- if (!js.isUndefined(parsed.name)) Option(parsed.name).map(_.toString) else None
+              age <-
+                if (!js.isUndefined(parsed.age)) Option(parsed.age).map(_.toString).flatMap(_.toIntOption) else None
+              email <- if (!js.isUndefined(parsed.email)) Option(parsed.email).map(_.toString) else None
+              user = User(name, age, email)
+            } yield s"""
                |Saved user $user with fields:
                |\t* age   = ${user.age}
                |\t* email = ${user.email}
                |""".stripMargin
 
-          val (code, response) = userResponse match {
-            case Some(message) => (200, message)
-            case _ => (400, "something went wrong")
+            val (code, response) = userResponse match {
+              case Some(message) => (200, message)
+              case _             => (400, "something went wrong")
+            }
+
+            println(response)
+
+            res.writeHead(code, js.Dictionary("Content-Type" -> "text/plain"))
+            res.end(response)
           }
-
-          println(response)
-
-          res.writeHead(code, js.Dictionary("Content-Type" -> "text/plain"))
-          res.end(response)
-        })
+        )
       } else {
         res.writeHead(400, js.Dictionary("Content-Type" -> "text/html"))
         res.end(
@@ -96,8 +101,10 @@ object Main {
       }
     })
 
-    server.listen(port, () => {
-      println(s"Server running on port $port")
-    })
+    server.listen(
+      port,
+      () => {
+        println(s"Server running on port $port")
+      })
   }
 }

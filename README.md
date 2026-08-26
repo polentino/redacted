@@ -37,7 +37,7 @@ for us that will pretty print in console/log their content, for example:
 case class UserPreferences(useDarkTheme: Boolean, maxHistoryItems: Int)
 
 val id = 123
-val up = store.getUserPreferencesByID(123)
+val up = store.getUserPreferencesByID(id)
 log.info(s"user preferences for user $id are $up")
 ```
 
@@ -76,7 +76,7 @@ website https://polentino.github.io/redacted/ :)
 In your `project/plugins.sbt` add the following line
 
 ```scala
-addSbtPlugin("io.github.polentino" % "sbt-redacted" % "1.1.0")
+addSbtPlugin("io.github.polentino" % "sbt-redacted" % "1.3.0")
 ```
 
 and then enable it in your specific (sub)project in `build.sbt` like so
@@ -85,7 +85,7 @@ and then enable it in your specific (sub)project in `build.sbt` like so
 lazy val root = (project in file("."))
   .enablePlugins(RedactedPlugin)
   .setting(
-    redactedVersion := "0.9.13"
+    redactedVersion := "0.10.0"
   )
 ```
 

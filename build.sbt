@@ -4,11 +4,11 @@ ThisBuild / versionScheme := Some("early-semver")
 // interesting; bumping scalatest / scalacheck, makes 3.1.x and 3.2.x compilation to fail
 val scalaTestVersion = "3.2.20"
 val scalaCheckVersion = "3.2.17.0"
-val scalaCheckNativeVersion = "3.2.19.0"
+val scalaCheckNativeVersion = "3.2.20.0"
 
 // versions overrides needed to address vulnerabilities
-val protobufJavaVersion = "4.35.1"
-val jacksonCoreVersion = "2.22.0"
+val protobufJavaVersion = "4.36.0"
+val jacksonCoreVersion = "2.22.2"
 
 // Scala versions for the compiler plugin
 val compilerPluginScalaVersions = List(
@@ -152,11 +152,11 @@ lazy val redactedTests = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   )
   .jsSettings(
     crossScalaVersions := platformScalaVersions,
-    libraryDependencies += "org.scalatestplus" %%% "scalacheck-1-18" % scalaCheckNativeVersion % Test
+    libraryDependencies += "org.scalatestplus" %%% "scalacheck-1-19" % scalaCheckNativeVersion % Test
   )
   .nativeSettings(
     crossScalaVersions := platformScalaVersions,
-    libraryDependencies += "org.scalatestplus" %%% "scalacheck-1-18" % scalaCheckNativeVersion % Test
+    libraryDependencies += "org.scalatestplus" %%% "scalacheck-1-19" % scalaCheckNativeVersion % Test
   )
 
 lazy val site = (project in file("redacted-docs"))
