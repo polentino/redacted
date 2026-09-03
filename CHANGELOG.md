@@ -1,3 +1,19 @@
+## [0.10.1](https://github.com/polentino/redacted/compare/v0.10.0...v0.10.1) (2026-09-03)
+
+### 📖 Docs
+
+* added Scala JS demo gif ([7a1b122](https://github.com/polentino/redacted/commit/7a1b122016bec97070ac8341988ecc856439466e))
+* GIF :/ ([1101b31](https://github.com/polentino/redacted/commit/1101b31369043f062a5b00139f8b105029801176))
+* small README fixes ([e4818f2](https://github.com/polentino/redacted/commit/e4818f28998a02addee57303ef449282bee54b3c))
+* update the supported versions ([dee22a5](https://github.com/polentino/redacted/commit/dee22a55ca68cddec1b7b66faf5e7b4a42ae1f29))
+* updated demo gif & demos dep versions ([11693a9](https://github.com/polentino/redacted/commit/11693a94c8b56096cf7a45e6036becb7b57e2ef7))
+* updated gif ([784b346](https://github.com/polentino/redacted/commit/784b3466bdb92468659bed3b9c13beff26513e83))
+
+### 🩹 Fixes
+
+* semantic-release version mismatch ([66b5507](https://github.com/polentino/redacted/commit/66b550758ce537818b83dd0e30a5bfe362e7ce30))
+* support Scala 3.9.0 ([#196](https://github.com/polentino/redacted/issues/196)) ([bd796c6](https://github.com/polentino/redacted/commit/bd796c67fe2cf31c3aaeda2fbb94d61a56a93249))
+
 ## [0.10.0](https://github.com/polentino/redacted/compare/v0.9.13...v0.10.0) (2026-06-22)
 
 ### ✨ Features

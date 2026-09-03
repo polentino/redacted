@@ -42,7 +42,7 @@ jobs:
           npm install @semantic-release/exec -D
           npm install @semantic-release/git -D
           npm install @semantic-release/github -D
-          npm install conventional-changelog-conventionalcommits -D
+          npm install conventional-changelog-conventionalcommits@9 -D
       - name: Run Semantic Commit Analyzer
         run: npx semantic-release --dry-run
         env:
@@ -106,7 +106,7 @@ jobs:
           npm install @semantic-release/exec -D
           npm install @semantic-release/git -D
           npm install @semantic-release/github -D
-          npm install conventional-changelog-conventionalcommits -D
+          npm install conventional-changelog-conventionalcommits@9 -D
       - name: Release
         run: npx semantic-release
         env:
