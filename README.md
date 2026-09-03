@@ -143,6 +143,7 @@ ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.h
 
 | Scala Version |        JVM         |       Native       |         JS         | Notes |
 |:-------------:|:------------------:|:------------------:|:------------------:|:-----:|
+|     3.9.0     | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
 |     3.8.4     | :white_check_mark: |         -          |         -          |   -   |
 |     3.7.4     | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
 |     3.6.4     | :white_check_mark: |         -          |         -          |   -   |
