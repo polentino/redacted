@@ -1,4 +1,4 @@
-scalaVersion := "3.7.4" /// or "2.13.18"
+scalaVersion := "3.7.4" /// or "3.9.0"
 
 lazy val root = (project in file("."))
   .enablePlugins(ScalaJSPlugin, RedactedPlugin)
