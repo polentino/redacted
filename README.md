@@ -141,26 +141,26 @@ The `redacted` ecosystem (annotation library, compiler plugin, sbt plugin) are a
 you need to make sure **Java 17+** is available in your system. Support for specific Scala versions is listed in the
 table below. However, it is advised to use the Long Term Support ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.html)).
 
-| Scala Version |        JVM         |    Native (0.5)     |      JS (1.x)      | Notes |
-|:-------------:|:------------------:|:-------------------:|:------------------:|:-----:|
-|     3.9.0     | :white_check_mark: | :white_check_mark:  | :white_check_mark: |  LTS  |
-|     3.8.4     | :white_check_mark: |          -          |         -          |   -   |
-|     3.7.4     | :white_check_mark: | :white_check_mark:  | :white_check_mark: |   -   |
-|     3.6.4     | :white_check_mark: |          -          |         -          |   -   |
-|     3.5.2     | :white_check_mark: |          -          |         -          |   -   |
-|     3.4.3     | :white_check_mark: |          -          |         -          |   -   |
-|     3.3.8     | :white_check_mark: | :white_check_mark:- | :white_check_mark: |  LTS  |
-|     3.3.7     | :white_check_mark: |          -          |         -          |  LTS  |
-|     3.3.6     | :white_check_mark: |          -          |         -          |  LTS  |
-|     3.3.5     | :white_check_mark: |          -          |         -          |  LTS  |
-|     3.3.4     | :white_check_mark: |          -          |         -          |  LTS  |
-|     3.3.3     | :white_check_mark: |          -          |         -          |  LTS  |
-|     3.3.1     | :white_check_mark: |          -          |         -          |  LTS  |
-|     3.3.0     | :white_check_mark: |          -          |         -          |  LTS  |
-|     3.2.2     | :white_check_mark: |          -          |         -          |   -   |
-|     3.1.3     | :white_check_mark: |          -          |         -          |   -   |
-|    2.13.18    | :white_check_mark: | :white_check_mark:  | :white_check_mark: |   -   |
-|    2.12.21    | :white_check_mark: | :white_check_mark:  | :white_check_mark: |   -   |
+| Scala Version |        JVM         |    Native (0.5)    |      JS (1.x)      | Notes |
+|:-------------:|:------------------:|:------------------:|:------------------:|:-----:|
+|     3.9.0     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
+|     3.8.4     | :white_check_mark: |         -          |         -          |   -   |
+|     3.7.4     | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
+|     3.6.4     | :white_check_mark: |         -          |         -          |   -   |
+|     3.5.2     | :white_check_mark: |         -          |         -          |   -   |
+|     3.4.3     | :white_check_mark: |         -          |         -          |   -   |
+|     3.3.8     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
+|     3.3.7     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.6     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.5     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.4     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.3     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.1     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.3.0     | :white_check_mark: |         -          |         -          |  LTS  |
+|     3.2.2     | :white_check_mark: |         -          |         -          |   -   |
+|     3.1.3     | :white_check_mark: |         -          |         -          |   -   |
+|    2.13.18    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
+|    2.12.21    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
 
 ## Platforms
 
