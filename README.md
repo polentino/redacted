@@ -13,18 +13,17 @@
 ![Simple example of @redacted usage](demo/redacted-example.gif "Sample usage")
 
 <!-- TOC -->
-
 * [Redacted](#redacted)
-    * [Introduction](#introduction)
-        * [A note on this README](#a-note-on-this-readme)
-    * [Configuration](#configuration)
-    * [Usage](#usage)
-    * [Supported Scala Versions](#supported-scala-versions)
-    * [How it works](#how-it-works)
-    * [Improvements](#improvements)
-    * [Credits](#credits)
-    * [Adopters](#adopters)
-
+  * [Introduction](#introduction)
+    * [A note on this README](#a-note-on-this-readme)
+  * [Configuration](#configuration)
+  * [Usage](#usage)
+  * [System Requirements & Supported Scala Versions](#system-requirements--supported-scala-versions)
+  * [Platforms](#platforms)
+  * [How it works](#how-it-works)
+  * [Improvements](#improvements)
+  * [Credits](#credits)
+  * [Adopters](#adopters)
 <!-- TOC -->
 
 ## Introduction
@@ -136,31 +135,32 @@ will still print the real values:
 > $ abcdefghijklmnopqrstuvwxyz   
 > $ polentino911@somemail.com
 
-## Supported Scala Versions
+## System Requirements & Supported Scala Versions
 
-`redacted` supports all Scala versions listed in the table below. However, it is advised to use the Long Term Support
-ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.html)).
+The `redacted` ecosystem (annotation library, compiler plugin, sbt plugin) are all compiled on Java 17; therefore,
+you need to make sure **Java 17+** is available in your system. Support for specific Scala versions is listed in the
+table below. However, it is advised to use the Long Term Support ones (as listed in [the Scala website](https://www.scala-lang.org/download/all.html)).
 
-| Scala Version |        JVM         |       Native       |         JS         | Notes |
-|:-------------:|:------------------:|:------------------:|:------------------:|:-----:|
-|     3.9.0     | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
-|     3.8.4     | :white_check_mark: |         -          |         -          |   -   |
-|     3.7.4     | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
-|     3.6.4     | :white_check_mark: |         -          |         -          |   -   |
-|     3.5.2     | :white_check_mark: |         -          |         -          |   -   |
-|     3.4.3     | :white_check_mark: |         -          |         -          |   -   |
-|     3.3.8     | :white_check_mark: |         -          |         -          |   -   |
-|     3.3.7     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
-|     3.3.6     | :white_check_mark: |         -          |         -          |  LTS  |
-|     3.3.5     | :white_check_mark: |         -          |         -          |  LTS  |
-|     3.3.4     | :white_check_mark: |         -          |         -          |  LTS  |
-|     3.3.3     | :white_check_mark: |         -          |         -          |  LTS  |
-|     3.3.1     | :white_check_mark: |         -          |         -          |  LTS  |
-|     3.3.0     | :white_check_mark: |         -          |         -          |  LTS  |
-|     3.2.2     | :white_check_mark: |         -          |         -          |   -   |
-|     3.1.3     | :white_check_mark: |         -          |         -          |   -   |
-|    2.13.18    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
-|    2.12.21    | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
+| Scala Version |        JVM         |    Native (0.5)     |      JS (1.x)      | Notes |
+|:-------------:|:------------------:|:-------------------:|:------------------:|:-----:|
+|     3.9.0     | :white_check_mark: | :white_check_mark:  | :white_check_mark: |  LTS  |
+|     3.8.4     | :white_check_mark: |          -          |         -          |   -   |
+|     3.7.4     | :white_check_mark: | :white_check_mark:  | :white_check_mark: |   -   |
+|     3.6.4     | :white_check_mark: |          -          |         -          |   -   |
+|     3.5.2     | :white_check_mark: |          -          |         -          |   -   |
+|     3.4.3     | :white_check_mark: |          -          |         -          |   -   |
+|     3.3.8     | :white_check_mark: | :white_check_mark:- | :white_check_mark: |  LTS  |
+|     3.3.7     | :white_check_mark: |          -          |         -          |  LTS  |
+|     3.3.6     | :white_check_mark: |          -          |         -          |  LTS  |
+|     3.3.5     | :white_check_mark: |          -          |         -          |  LTS  |
+|     3.3.4     | :white_check_mark: |          -          |         -          |  LTS  |
+|     3.3.3     | :white_check_mark: |          -          |         -          |  LTS  |
+|     3.3.1     | :white_check_mark: |          -          |         -          |  LTS  |
+|     3.3.0     | :white_check_mark: |          -          |         -          |  LTS  |
+|     3.2.2     | :white_check_mark: |          -          |         -          |   -   |
+|     3.1.3     | :white_check_mark: |          -          |         -          |   -   |
+|    2.13.18    | :white_check_mark: | :white_check_mark:  | :white_check_mark: |   -   |
+|    2.12.21    | :white_check_mark: | :white_check_mark:  | :white_check_mark: |   -   |
 
 ## Platforms
 
@@ -175,7 +175,6 @@ addCompilerPlugin("io.github.polentino" %% "redacted-plugin" % redactedVersion c
 ```
 
 ![Simple example of @redacted usage in Scala JS](demo/redacted-example-scalajs.gif "Scala JS Example")
-
 
 ## How it works
 
