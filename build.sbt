@@ -175,12 +175,11 @@ lazy val site = (project in file("redacted-docs"))
 
 // `+test` orders versions as strings ("3.10.0" < "3.2.2"), so `library` falls back to 3.3.0
 // right before the 3.2.2 round, which then can't read its TASTy: loop in numeric order instead
-val allScalaVersions =
-  (compilerPluginScalaVersions ++ platformScalaVersions ++ libraryScalaVersions).distinct
-    .sortBy { v =>
-      val Array(major, minor, patch) = v.split('.').map(_.toInt)
-      (major, minor, patch)
-    }
+val allScalaVersions = (compilerPluginScalaVersions ++ platformScalaVersions ++ libraryScalaVersions).distinct
+  .sortBy { v =>
+    val Array(major, minor, patch) = v.split('.').map(_.toInt)
+    (major, minor, patch)
+  }
 addCommandAlias("testAll", ("clean" +: allScalaVersions.map(v => s"++$v test")).mkString("; ", "; ", ""))
 addCommandAlias("fmt", "; scalafix; scalafmtAll; scalafmtSbt")
 addCommandAlias("fmtCheck", "; scalafmtCheckAll ; scalafmtSbtCheck")
