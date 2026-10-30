@@ -143,13 +143,15 @@ table below. However, it is advised to use the Long Term Support ones (as listed
 
 | Scala Version |        JVM         |    Native (0.5)    |      JS (1.x)      | Notes |
 |:-------------:|:------------------:|:------------------:|:------------------:|:-----:|
+|    3.10.0     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
 |     3.9.0     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
 |     3.8.4     | :white_check_mark: |         -          |         -          |   -   |
 |     3.7.4     | :white_check_mark: | :white_check_mark: | :white_check_mark: |   -   |
 |     3.6.4     | :white_check_mark: |         -          |         -          |   -   |
 |     3.5.2     | :white_check_mark: |         -          |         -          |   -   |
 |     3.4.3     | :white_check_mark: |         -          |         -          |   -   |
-|     3.3.8     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
+|     3.3.9     | :white_check_mark: | :white_check_mark: | :white_check_mark: |  LTS  |
+|     3.3.8     | :white_check_mark: |         -          |         -          |  LTS  |
 |     3.3.7     | :white_check_mark: |         -          |         -          |  LTS  |
 |     3.3.6     | :white_check_mark: |         -          |         -          |  LTS  |
 |     3.3.5     | :white_check_mark: |         -          |         -          |  LTS  |

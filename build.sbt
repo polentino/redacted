@@ -24,12 +24,14 @@ val compilerPluginScalaVersions = List(
   "3.3.6",
   "3.3.7",
   "3.3.8",
+  "3.3.9",
   "3.4.3",
   "3.5.2",
   "3.6.4",
   "3.7.4",
   "3.8.4",
-  "3.9.0"
+  "3.9.0",
+  "3.10.0"
 )
 
 // Scala versions used for Scala.js / Scala Native (supported by both toolchains)
@@ -171,7 +173,14 @@ lazy val site = (project in file("redacted-docs"))
     gitHubPagesRepoName := "redacted"
   )
 
-addCommandAlias("testAll", "; clean; +test")
+// `+test` orders versions as strings ("3.10.0" < "3.2.2"), so `library` falls back to 3.3.0
+// right before the 3.2.2 round, which then can't read its TASTy: loop in numeric order instead
+val allScalaVersions = (compilerPluginScalaVersions ++ platformScalaVersions ++ libraryScalaVersions).distinct
+  .sortBy { v =>
+    val Array(major, minor, patch) = v.split('.').map(_.toInt)
+    (major, minor, patch)
+  }
+addCommandAlias("testAll", ("clean" +: allScalaVersions.map(v => s"++$v test")).mkString("; ", "; ", ""))
 addCommandAlias("fmt", "; scalafix; scalafmtAll; scalafmtSbt")
 addCommandAlias("fmtCheck", "; scalafmtCheckAll ; scalafmtSbtCheck")
 addCommandAlias("crossReleaseAll", "; clean; +publishSigned; sonaUpload; sonaRelease")
