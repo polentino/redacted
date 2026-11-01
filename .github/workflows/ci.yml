@@ -76,6 +76,11 @@ jobs:
       - name: Upload dependency graph
         if: github.ref == 'refs/heads/main'
         uses: scalacenter/sbt-dependency-submission@v2
+        with:
+          # do not send dependency graphs for libraries used in tests / GH page generation: those trigger too many
+          # dependabot alerts for vulnerable packages that are not actually used by neither the library, nor the
+          # compiler plugin.
+          configs-ignore: scala-doc-tool test
 
   semantic-release:
     name: Semantic Release
