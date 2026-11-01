@@ -27,4 +27,4 @@ ThisBuild / publishTo := {
   else localStaging.value
 }
 
-usePgpKeyHex("5A167E17FB1B86685ECFD29A2F7D08508EB255BF")
+usePgpKeyHex("277E5B34BC65028A5CA74158E82C8FEA0D8D3616")
