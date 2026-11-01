@@ -1,3 +1,13 @@
+## [0.10.2](https://github.com/polentino/redacted/compare/v0.10.1...v0.10.2) (2026-10-30)
+
+### 📖 Docs
+
+* update README.md ([#206](https://github.com/polentino/redacted/issues/206)) ([e1f2b16](https://github.com/polentino/redacted/commit/e1f2b16342547c31174ca9033b3545df90c0dc26))
+
+### 🩹 Fixes
+
+* support Scala 3.3.9 & 3.10.0 ([#213](https://github.com/polentino/redacted/issues/213)) ([f9e1740](https://github.com/polentino/redacted/commit/f9e174015dd30d54b9fa18dcadf15f2cbb984a66))
+
 ## [0.10.1](https://github.com/polentino/redacted/compare/v0.10.0...v0.10.1) (2026-09-03)
 
 ### 📖 Docs
