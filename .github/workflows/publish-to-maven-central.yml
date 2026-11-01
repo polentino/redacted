@@ -1,0 +1,51 @@
+name: Publish to Maven Central
+
+on:
+  push:
+    tags:
+      - 'v*'
+  # Manual re-run: pick the tag in "Use workflow from".
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish ${{ github.ref_name }}
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Setup sbt launcher
+        uses: sbt/setup-sbt@v1
+        with:
+          sbt-runner-version: 1.12.12
+          disk-cache: false
+      - name: Check tag matches version.sbt
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          SBT_VERSION="$(sed -nE 's/.*version := "([^"]+)".*/\1/p' version.sbt)"
+          if [ "$TAG_VERSION" != "$SBT_VERSION" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match version.sbt ($SBT_VERSION)"
+            exit 1
+          fi
+      - name: Import GPG signing key
+        run: printf '%s\n' "$PGP_SECRET" | gpg --batch --import
+        env:
+          PGP_SECRET: ${{ secrets.PGP_ARMORED_PRIVATE_SIGNING_KEY }}
+      - name: Sign, upload and release
+        run: sbt crossReleaseAll
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PRIVATE_SIGNING_KEY_PASSPHRASE }} # read by sbt-pgp
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER_TOKEN }}             # read by sbt (supports Central since 1.11)
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_USER_TOKEN_PASSWORD }}    # read by sbt (supports Central since 1.11)
