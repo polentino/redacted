@@ -173,7 +173,7 @@ lazy val site = (project in file("redacted-docs"))
     gitHubPagesRepoName := "redacted"
   )
 
-// `+test` orders versions as strings ("3.10.0" < "3.2.2"), so `library` falls back to 3.3.0
+// `+test` orders versions as strings ("3.10.0" < "3.2.2"), so `library` falls back to 3.3.9
 // right before the 3.2.2 round, which then can't read its TASTy: loop in numeric order instead
 val allScalaVersions = (compilerPluginScalaVersions ++ platformScalaVersions ++ libraryScalaVersions).distinct
   .sortBy { v =>
