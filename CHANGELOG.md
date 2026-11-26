@@ -1,3 +1,22 @@
+## [0.10.3](https://github.com/polentino/redacted/compare/v0.10.2...v0.10.3) (2026-11-26)
+
+### 🩹 Fixes
+
+* support for Scala 3.10.1 ([#224](https://github.com/polentino/redacted/issues/224)) ([bc3e268](https://github.com/polentino/redacted/commit/bc3e26851269e3ddf83be49882e9310b7976f249))
+
+### 🧹 Chores
+
+* bump auxlib, clib, javalib, nativelib, ... from 0.5.12 to 0.5.13 ([#223](https://github.com/polentino/redacted/issues/223)) ([dba582b](https://github.com/polentino/redacted/commit/dba582ba7a3cca58857dbb9e13d4cef29eac6723))
+* bump jackson-core from 2.22.4 to 2.23.0 ([#220](https://github.com/polentino/redacted/issues/220)) ([d3b3a26](https://github.com/polentino/redacted/commit/d3b3a26cdb28fb22a6ae2baa5d087b15602f6a98))
+* bump sbt-pgp from 2.3.2 to 2.4.0 ([#221](https://github.com/polentino/redacted/issues/221)) ([18862ce](https://github.com/polentino/redacted/commit/18862ce16c93e5717d05405ee793f4ce1f01ba8c))
+* bump sbt-scalafix from 0.14.9 to 0.14.10 ([#219](https://github.com/polentino/redacted/issues/219)) ([1d09572](https://github.com/polentino/redacted/commit/1d09572a6951d80f98f4648b09be95f46d79143f))
+* bump sbt-scalajs, scalajs-compiler, ... from 1.22.0 to 1.23.0 ([#222](https://github.com/polentino/redacted/issues/222)) ([f53dedf](https://github.com/polentino/redacted/commit/f53dedfacd39a49be6353f39cc11d851d43bb8e6))
+* bump sbt, sbt-dependency-tree, ... from 1.13.0 to 1.13.1 ([#212](https://github.com/polentino/redacted/issues/212)) ([99f1818](https://github.com/polentino/redacted/commit/99f1818f039cccd0860bf9197052ef0853abe27e))
+* bump scala3-library_sjs1_3 from 3.3.0 to 3.3.9 ([#218](https://github.com/polentino/redacted/issues/218)) ([8450862](https://github.com/polentino/redacted/commit/8450862a4581ee94c17476cccd326854ec99d988))
+* **deps:** bump compression ([#210](https://github.com/polentino/redacted/issues/210)) ([e13edbc](https://github.com/polentino/redacted/commit/e13edbc93a8cbd9dd54e641febfc978ef621f10f))
+* reduce dependabot noise ([#217](https://github.com/polentino/redacted/issues/217)) ([5451bd2](https://github.com/polentino/redacted/commit/5451bd2f5a26e6947318845115c0a0e93f474cd4))
+* update publishing ([#215](https://github.com/polentino/redacted/issues/215)) ([ff3e729](https://github.com/polentino/redacted/commit/ff3e729dcf7ca9cf75bb7e68915fecd63a848db7))
+
 ## [0.10.2](https://github.com/polentino/redacted/compare/v0.10.1...v0.10.2) (2026-10-30)
 
 ### 📖 Docs
