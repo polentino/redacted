@@ -31,7 +31,7 @@ val compilerPluginScalaVersions = List(
   "3.7.4",
   "3.8.4",
   "3.9.0",
-  "3.10.0"
+  "3.10.1"
 )
 
 // Scala versions used for Scala.js / Scala Native (supported by both toolchains)
